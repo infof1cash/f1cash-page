@@ -59,7 +59,13 @@
       overflow:hidden;
       isolation:isolate;
     }
-    .fx-logo img{display:block;width:100%;height:auto;filter:drop-shadow(0 4px 8px rgba(0,0,0,.45))}
+    /* Make dark logo pop on dark background: invert + cyan tint + glow */
+    .fx-logo img{
+      display:block;width:100%;height:auto;
+      filter:brightness(0) invert(1) saturate(2)
+             hue-rotate(180deg)
+             drop-shadow(0 4px 10px rgba(17,177,255,.45));
+    }
     .fx-logo::before,.fx-logo::after{
       content:"";position:absolute;inset:-10%;
       background:linear-gradient(90deg,
