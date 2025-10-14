@@ -1,23 +1,16 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+<!DOCTYPE html><html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>F1 Cash — Simple Business Funding</title>
   <meta name="description" content="F1 Cash provides simple, fast working capital for small businesses with clear monthly payments and no collateral." />
   <meta name="color-scheme" content="dark" />
-
-  <!-- Favicon / app icons (tab icon) -->
   <link rel="icon" type="image/png" href="assets/logo.png" />
   <link rel="apple-touch-icon" href="assets/logo.png" />
   <link rel="manifest" href="assets/site.webmanifest" />
-
-  <!-- Futuristic fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Exo+2:wght@400;600;800&display=swap" rel="stylesheet">
-
-  <style>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Exo+2:wght@400;600;800&display=swap" rel="stylesheet"> <style>
     :root{
       --bg-1:#05070d; --bg-2:#0b1220; --line:#1c2640;
       --ink:#e6ecff; --muted:#92a0c5;
@@ -26,110 +19,59 @@
     }
 
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
+    html,body{height:100%;overflow:hidden}
     body{
-      min-height:100vh; display:flex; flex-direction:column; color:var(--ink);
+      min-height:100vh;display:flex;flex-direction:column;justify-content:center;color:var(--ink);
       background:radial-gradient(1200px 800px at 10% -10%, #0c1325 0%, #06080f 60%, #05070d 100%), linear-gradient(120deg, var(--bg-1), var(--bg-2));
-      overflow-x:hidden; font-family:'Exo 2',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><defs><filter id='g' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur stdDeviation='0.5'/></filter></defs><path d='M3 3 L23 12 L15 15 L21 28 L16.5 29.5 L10 17 L3 20 Z' fill='%2300b7ff'/><path d='M3 3 L23 12 L15 15' stroke='%23bff0ff' stroke-width='1.1'/><circle cx='3' cy='3' r='2' fill='%2300b7ff' filter='url(%23g)' opacity='0.8'/></svg>") 0 0, default;
+      font-family:'Exo 2',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+      cursor:none;
     }
 
-    /* ===== Splash (single smooth intro) ===== */
-    .splash{position:fixed; inset:0; z-index:9999; display:grid; place-items:center; background:
-      radial-gradient(1100px 800px at 50% -20%, #0c1325 0%, #06080f 65%, #05070d 100%), linear-gradient(120deg, var(--bg-1), var(--bg-2));
-      transition:opacity .8s ease, visibility .8s ease}
-    .splash__logo{width:240px; height:auto; border-radius:22px; box-shadow:0 0 42px rgba(17,177,255,.44), 0 0 0 2px rgba(255,255,255,.08) inset; animation:logoIntro 680ms ease-out both}
-    @keyframes logoIntro{0%{opacity:0; transform:scale(.92)}60%{opacity:1; transform:scale(1.03)}100%{opacity:1; transform:scale(1)}}
-    .splash.is-fading{animation:fadeAway .75s cubic-bezier(.22,.61,.36,1) forwards}
-    @keyframes fadeAway{from{opacity:1; transform:none}to{opacity:0; transform:scale(1.02)}}
+    /* Splash */
+    .splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:radial-gradient(1100px 800px at 50% -20%, #0c1325 0%, #06080f 65%, #05070d 100%),linear-gradient(120deg, var(--bg-1), var(--bg-2));transition:opacity 1s ease, visibility 1s ease}
+    .splash__logo{width:230px;height:auto;border-radius:22px;box-shadow:0 0 42px rgba(17,177,255,.44),0 0 0 2px rgba(255,255,255,.08) inset;animation:logoIntro 1.2s ease-out forwards}
+    @keyframes logoIntro{0%{opacity:0;transform:scale(.9)}70%{opacity:1;transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
+    .splash.is-fading{animation:fadeAway 1s ease forwards}
+    @keyframes fadeAway{0%{opacity:1}100%{opacity:0;visibility:hidden}}
 
-    /* ===== Stage & reveal only after splash ends ===== */
-    .wrap{max-width:var(--maxw);margin:0 auto;padding:54px 40px;flex:1;width:100%}
-    .reveal{opacity:0; transform:translateY(28px); filter:blur(10px)}
-    .app-ready .reveal{animation:reveal .9s cubic-bezier(.22,.61,.36,1) forwards}
-    .delay-1{animation-delay:.10s} .delay-2{animation-delay:.26s} .delay-3{animation-delay:.42s} .delay-4{animation-delay:.58s}
-    @keyframes reveal{to{opacity:1; transform:none; filter:blur(0)}}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:60px 40px;width:100%;opacity:0;transform:translateY(30px);filter:blur(8px);transition:opacity 1s ease,transform 1s ease,filter 1s ease}
+    .app-ready .wrap{opacity:1;transform:none;filter:blur(0)}
 
-    header{display:flex;align-items:center;gap:22px;padding:16px 0 34px;border-bottom:1px solid var(--line)}
-    .brand{display:flex;align-items:center;gap:18px;position:relative}
-    .logo img{width:112px;height:auto;border-radius:22px;box-shadow:0 12px 26px rgba(17,177,255,.25)}
+    header{display:flex;align-items:center;gap:20px;padding-bottom:30px;border-bottom:1px solid var(--line)}
+    .brand{display:flex;align-items:center;gap:18px}
+    .logo img{width:110px;height:auto;border-radius:22px;box-shadow:0 12px 26px rgba(17,177,255,.25)}
     .logo-text h1{font-family:'Orbitron',sans-serif;font-weight:700;font-size:28px;letter-spacing:.9px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;color:transparent}
     .logo-text p{color:var(--muted);font-size:14px}
 
-    /* ELECTRIC FLICKER for brand (professional sci‑fi) */
-    .brand.flicker .logo img{animation:crtPulse .7s ease-out 1 both}
-    .brand.flicker .logo-text{animation:crtFlicker 1s steps(18,end) 1 both}
-    @keyframes crtPulse{0%{filter:brightness(.6) saturate(1) drop-shadow(0 0 0 rgba(17,177,255,0))} 40%{filter:brightness(1.3) drop-shadow(0 0 20px rgba(17,177,255,.45))} 100%{filter:brightness(1) drop-shadow(0 0 10px rgba(17,177,255,.25))}}
-    @keyframes crtFlicker{0%,8%{opacity:.2; text-shadow:0 0 10px rgba(17,177,255,.7)} 18%{opacity:1} 28%{opacity:.35} 38%{opacity:1} 48%{opacity:.4} 58%{opacity:1} 100%{opacity:1; text-shadow:0 0 14px rgba(17,177,255,.25)}}
-
-    /* Full-height hero grid */
-    main{display:grid;grid-template-columns:1.1fr .9fr;align-items:stretch;gap:64px;padding-block:36px;min-height:clamp(620px, 82vh, 960px)}
-    .content{min-width:0; display:flex;flex-direction:column;justify-content:center}
-    .content.hero{position:relative; overflow:hidden}
-    h2{font-family:'Orbitron',sans-serif;font-weight:800;font-size:62px;line-height:1.04;margin:0 0 18px;background:linear-gradient(90deg,var(--accent),#7dd3fc);-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 6px 18px rgba(17,177,255,.12))}
+    main{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:60px;min-height:80vh}
+    .content{display:flex;flex-direction:column;justify-content:center}
+    h2{font-family:'Orbitron',sans-serif;font-weight:800;font-size:62px;line-height:1.04;margin:0 0 18px;background:linear-gradient(90deg,var(--accent),#7dd3fc);-webkit-background-clip:text;color:transparent}
     p{color:#c6d7f3;line-height:1.72;margin:0 0 20px;font-size:1.12rem}
-
-    /* Futuristic bullet style (angular markers) */
     ul{list-style:none;margin:0 0 24px 0}
     ul li{position:relative;padding-left:28px;margin:10px 0;font-weight:600;letter-spacing:.2px}
     ul li::before{content:"";position:absolute;left:0;top:.55em;width:16px;height:10px;border-left:3px solid #00b7ff;border-top:3px solid #00b7ff;transform:skewX(-18deg) rotate(-45deg);filter:drop-shadow(0 0 6px rgba(17,177,255,.5))}
 
-    .cta-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap; margin-top:14px}
+    .cta-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:14px}
     .apply-btn{display:inline-flex;align-items:center;gap:12px;background:linear-gradient(90deg,#00b7ff,#007aff);color:#fff;padding:16px 40px;border-radius:16px;font-weight:800;letter-spacing:.6px;box-shadow:0 12px 28px rgba(17,177,255,.28);font-family:'Orbitron',sans-serif;border:0;cursor:not-allowed;opacity:.98}
-    .apply-btn span{font-size:1.15em}
     .note{font-size:13px;color:var(--muted);margin:0}
 
-    /* Terms card with parallax glow */
-    .card-wrap{position:relative; display:flex; align-items:center}
-    .card-wrap::before{content:""; position:absolute; inset:-18px; z-index:0; pointer-events:none; border-radius:26px; background:radial-gradient(700px 340px at var(--gx,60%) var(--gy,40%), rgba(17,177,255,.14), transparent 60%); transition:background-position .12s ease}
-    .card{position:relative; z-index:1; background:linear-gradient(180deg,#0e1322,#0d1220);border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:0 18px 46px rgba(0,0,0,.34),inset 0 0 1px rgba(255,255,255,.05)}
+    .card-wrap{position:relative;display:flex;align-items:center;justify-content:center}
+    .card-wrap::before{content:"";position:absolute;width:100%;height:100%;border-radius:24px;pointer-events:none;background:radial-gradient(circle at center,rgba(17,177,255,.18),transparent 70%);z-index:0;}
+    .card{position:relative;z-index:1;background:linear-gradient(180deg,#0e1322,#0d1220);border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:0 18px 46px rgba(0,0,0,.34),inset 0 0 1px rgba(255,255,255,.05)}
     .card h3{color:#a8dfff;font-size:1.25rem;margin-bottom:12px;border-bottom:1px solid rgba(53,198,255,.18);padding-bottom:10px}
-    .row{display:grid;grid-template-columns:auto 1fr;gap:12px 16px;align-items:center;margin:12px 0}
-    .label{color:var(--muted);font-size:14px}
-    .value{font-weight:800}
 
-    /* Futuristic contact chips */
-    .contact-link{--ring:rgba(17,177,255,.45);display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;text-decoration:none;font-weight:800;background:linear-gradient(180deg,rgba(17,177,255,.08),rgba(17,177,255,.03));border:1px solid rgba(17,177,255,.26);color:#cfe9ff;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05),0 10px 24px rgba(0,0,0,.25);transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease}
-    .contact-link .glyph{width:18px;height:18px;display:grid;place-items:center}
-    .contact-link:hover{transform:translateY(-1px);background:linear-gradient(180deg,rgba(17,177,255,.14),rgba(17,177,255,.06));border-color:rgba(17,177,255,.55);box-shadow:0 0 0 6px rgba(17,177,255,.06),0 20px 48px rgba(0,0,0,.35)}
-    .contact-link .text{background:linear-gradient(90deg,#e6f5ff,#7ed8ff);-webkit-background-clip:text;color:transparent}
+    /* Cursor */
+    .cursor-glow{position:fixed;left:0;top:0;width:140px;height:140px;border-radius:50%;pointer-events:none;z-index:9998;background:radial-gradient(circle,rgba(17,177,255,.4)0%,rgba(17,177,255,.15)40%,transparent 70%);filter:blur(20px);mix-blend-mode:screen;transition:transform .1s ease-out}
 
-    /* Footer */
-    footer{position:relative; z-index:1; display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px; padding:24px 40px; background:rgba(0,10,20,.28); backdrop-filter:saturate(120%) blur(2px); color:var(--muted); font-size:14px}
-    footer::before{content:""; position:absolute; left:0; right:0; top:0; height:1px; background:linear-gradient(90deg,transparent,var(--accent),transparent); opacity:.65}
-    .footer-left,.footer-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-    .footer-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;border:1px solid rgba(17,177,255,.26);background:linear-gradient(180deg,rgba(17,177,255,.06),rgba(17,177,255,.02));text-decoration:none;color:#d6eaff;font-weight:700}
-    .footer-chip svg{width:16px;height:16px}
-
-    /* HERO scanline shimmer */
-    .hero::after{content:""; position:absolute; inset:0; pointer-events:none; background:repeating-linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.06) 1px, transparent 1px, transparent 4px); opacity:0; transform:translateY(-20%)}
-    .app-ready .hero::after{animation:heroShimmer 1.6s ease-out .25s 1 forwards}
-    @keyframes heroShimmer{0%{opacity:.0; transform:translateY(-30%)}40%{opacity:.25}80%{opacity:.08}100%{opacity:0; transform:translateY(35%)}}
-
-    /* Cursor halo + particle trail */
-    .cursor-glow{position:fixed; left:0; top:0; width:120px; height:120px; border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%, -50%); opacity:.55; background:radial-gradient(60% 60% at 50% 50%, rgba(17,177,255,.25), rgba(17,177,255,.10) 60%, transparent 70%); filter:blur(10px)}
-    .trail{position:fixed; width:10px; height:10px; border-radius:50%; pointer-events:none; z-index:9997; background:radial-gradient(circle, rgba(110,231,255,.9) 0%, rgba(17,177,255,.0) 70%); opacity:0; transform:translate(-50%,-50%)}
-
-    /* Responsive */
-    @media (max-width:1450px){:root{--maxw:1380px} h2{font-size:56px}}
-    @media (max-width:1100px){:root{--maxw:1000px} main{grid-template-columns:1fr} h2{font-size:46px} .logo img{width:96px}}
-    @media (max-width:520px){h2{font-size:34px} p{font-size:1.02rem} .card{padding:20px} .apply-btn{width:100%; justify-content:center}}
-    @media (pointer:coarse){.cursor-glow,.trail{display:none} body{cursor:auto}}
-  </style>
-</head>
+    @media(max-width:1100px){main{grid-template-columns:1fr}h2{font-size:46px}.logo img{width:96px}}
+    @media(max-width:520px){h2{font-size:34px}.card{padding:20px}.apply-btn{width:100%;justify-content:center}}
+  </style></head>
 <body>
-  <!-- Cursor FX -->
   <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
-  <!-- create trails dynamically in JS -->
-
-  <!-- Splash -->
   <div class="splash" id="splash" aria-hidden="true">
     <img class="splash__logo" src="assets/logo.png" alt="F1 Cash logo">
-  </div>
-
-  <!-- Main content -->
-  <div class="wrap">
-    <header class="reveal delay-1">
+  </div> <div class="wrap" id="app">
+    <header>
       <div class="brand" id="brand">
         <div class="logo"><img src="assets/logo.png" alt="F1 Cash logo"></div>
         <div class="logo-text">
@@ -137,135 +79,60 @@
           <p>Simple Business Funding</p>
         </div>
       </div>
-    </header>
-
-    <main>
-      <div class="content hero reveal delay-2">
-        <h2>Fast working capital for small businesses</h2>
-        <p>Funding up to $1,000 with clear monthly payments and no collateral or hard credit pulls.</p>
-        <ul id="typing-list">
-          <li>Business owners with 12+ months in operation</li>
-          <li>Simple promissory note after verification</li>
-          <li>6 equal monthly installments</li>
-        </ul>
-        <div class="cta-row">
-          <a class="apply-btn" title="Coming soon"><span>🚀</span> APPLY NOW</a>
-          <p class="note">Button disabled for now — application link coming soon.</p>
-        </div>
-      </div>
-
-      <div class="card-wrap reveal delay-3" id="terms-wrap">
-        <aside class="card" aria-label="At-a-glance terms">
-          <h3>At-a-glance terms</h3>
-          <div class="row"><span class="label">Typical advance</span><span class="value">$300 – $1,000</span></div>
-          <div class="row"><span class="label">Schedule</span><span class="value">6 monthly payments</span></div>
-          <div class="row"><span class="label">Support</span>
-            <span class="value">
-              <a class="contact-link" href="mailto:info@f1cash.net">
-                <span class="glyph" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="#bfe6ff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#bfe6ff" stroke-width="1.5"/></svg>
-                </span>
-                <span class="text">info@f1cash.net</span>
-              </a>
-            </span>
-          </div>
-          <div class="row"><span class="label">Phone</span>
-            <span class="value">
-              <a class="contact-link" href="tel:+12294484389">
-                <span class="glyph" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#bfe6ff" stroke-width="1.5"/></svg>
-                </span>
-                <span class="text">+1 229-448-4389</span>
-              </a>
-            </span>
-          </div>
-        </aside>
-      </div>
-    </main>
+    </header><main>
+  <div class="content">
+    <h2>Fast working capital for small businesses</h2>
+    <p>Funding up to $1,000 with clear monthly payments and no collateral or hard credit pulls.</p>
+    <ul id="typing-list">
+      <li>Business owners with 12+ months in operation</li>
+      <li>Simple promissory note after verification</li>
+      <li>6 equal monthly installments</li>
+    </ul>
+    <div class="cta-row">
+      <a class="apply-btn" title="Coming soon">🚀 APPLY NOW</a>
+      <p class="note">Button disabled for now — application link coming soon.</p>
+    </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="reveal delay-4" role="contentinfo">
-    <div class="footer-left">
-      <a class="footer-chip" href="mailto:info@f1cash.net" aria-label="Email info at f1cash dot net">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 2 2H5a2 2 0 0 1-2-2V7Z" stroke="#aee2ff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#aee2ff" stroke-width="1.5"/></svg>
-        info@f1cash.net
-      </a>
-      <a class="footer-chip" href="tel:+12294484389" aria-label="Call +1 229 448 4389">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#aee2ff" stroke-width="1.5"/></svg>
-        +1 229-448-4389
-      </a>
-    </div>
-    <div class="footer-right">© <span id="year">2025</span> F1 Cash · All rights reserved.</div>
-  </footer>
+  <div class="card-wrap">
+    <aside class="card" aria-label="At-a-glance terms">
+      <h3>At-a-glance terms</h3>
+      <div class="row"><span class="label">Typical advance</span><span class="value">$300 – $1,000</span></div>
+      <div class="row"><span class="label">Schedule</span><span class="value">6 monthly payments</span></div>
+      <div class="row"><span class="label">Support</span><span class="value"><a href="mailto:info@f1cash.net" style="color:#11b1ff;text-decoration:none;">info@f1cash.net</a></span></div>
+      <div class="row"><span class="label">Phone</span><span class="value"><a href="tel:+12294484389" style="color:#11b1ff;text-decoration:none;">+1 229-448-4389</a></span></div>
+    </aside>
+  </div>
+</main>
 
-  <script>
-    (function(){
-      var splash = document.getElementById('splash');
-      var brand = document.getElementById('brand');
-      var typingList = document.getElementById('typing-list');
-      var cursorGlow = document.getElementById('cursorGlow');
-      var termsWrap = document.getElementById('terms-wrap');
+  </div> <script>
+    const splash=document.getElementById('splash');
+    const app=document.getElementById('app');
+    const cursor=document.getElementById('cursorGlow');
 
-      /* ===== Splash timing: content ONLY after splash ends ===== */
-      function startReveal(){
-        document.body.classList.add('app-ready');
-        // run brand flicker just once
-        brand.classList.add('flicker');
-        setTimeout(function(){ brand.classList.remove('flicker'); }, 1100);
-        startTyping();
-      }
-      function fadeOutSplash(){
-        if(!splash){ startReveal(); return; }
-        splash.classList.add('is-fading');
-        splash.addEventListener('animationend', function(){
-          splash.style.display='none';
-          startReveal();
-        }, {once:true});
-      }
-      setTimeout(fadeOutSplash, 720); // complete logoIntro, then fade
+    function fadeOutSplash(){
+      splash.classList.add('is-fading');
+      setTimeout(()=>{splash.style.display='none';document.body.classList.add('app-ready');},1000);
+    }
+    setTimeout(fadeOutSplash,1400);
 
-      /* ===== Typewriter bullets (sequential) ===== */
-      function startTyping(){
-        if(!typingList) return;
-        var items = Array.from(typingList.querySelectorAll('li'));
-        items.forEach(function(li){ li.setAttribute('data-full', li.textContent.trim()); li.textContent=''; li.style.opacity = 0; });
-        var idx = 0;
-        function typeNext(){
-          if(idx >= items.length) return;
-          var el = items[idx];
-          var txt = el.getAttribute('data-full');
-          el.style.opacity = 1;
-          var i = 0; var speed = 14;
-          (function step(){
-            if(i <= txt.length){ el.textContent = txt.slice(0,i); i++; setTimeout(step, speed); }
-            else { idx++; setTimeout(typeNext, 160); }
-          })();
-        }
-        typeNext();
-      }
+    // Cursor follow
+    let x=window.innerWidth/2,y=window.innerHeight/2;
+    document.addEventListener('mousemove',e=>{x=e.clientX;y=e.clientY;cursor.style.transform=`translate(${x}px,${y}px)`;});
 
-      /* ===== Cursor halo + particle trail ===== */
-      // create a few trailing particles
-      var trails = [];
-      for(var t=0;t<8;t++){ var s=document.createElement('div'); s.className='trail'; document.body.appendChild(s); trails.push({el:s,x:window.innerWidth/2,y:window.innerHeight/2,alpha:0}); }
-      var tx=window.innerWidth/2, ty=window.innerHeight/2, x=tx, y=ty; // glow target/current
-      function raf(){
-        // glow follow
-        x += (tx - x) * 0.18; y += (ty - y) * 0.18; cursorGlow.style.transform = 'translate('+x+'px,'+y+'px) translate(-50%,-50%)';
-        // particles
-        trails.forEach(function(p,i){ p.x += (x - p.x) * (0.12 + i*0.01); p.y += (y - p.y) * (0.12 + i*0.01); p.alpha = .35 - i*0.035; p.el.style.opacity = Math.max(0,p.alpha); p.el.style.left = p.x+'px'; p.el.style.top = p.y+'px'; p.el.style.width = (10 - i*0.7) + 'px'; p.el.style.height = (10 - i*0.7) + 'px'; });
-        requestAnimationFrame(raf);
-      }
-      raf();
-      window.addEventListener('mousemove', function(e){
-        tx = e.clientX; ty = e.clientY;
-        if(termsWrap){ var r = termsWrap.getBoundingClientRect(); var px = Math.max(0, Math.min(1, (e.clientX - r.left)/r.width))*100; var py = Math.max(0, Math.min(1, (e.clientY - r.top)/r.height))*100; termsWrap.style.setProperty('--gx', px+'%'); termsWrap.style.setProperty('--gy', py+'%'); }
-      }, {passive:true});
-
-      // Year
-      var yEl=document.getElementById('year'); if(yEl){ yEl.textContent=new Date().getFullYear(); }
-    })();
-  </script>
-</body>
+    // Typewriter bullets
+    const list=document.getElementById('typing-list');
+    const items=list.querySelectorAll('li');
+    items.forEach(li=>{li.dataset.text=li.textContent;li.textContent='';li.style.opacity=0;});
+    let i=0;
+    function typeNext(){
+      if(i>=items.length)return;
+      const el=items[i];el.style.opacity=1;const text=el.dataset.text;let j=0;
+      const interval=setInterval(()=>{
+        el.textContent=text.slice(0,j++);
+        if(j>text.length){clearInterval(interval);i++;setTimeout(typeNext,200);}
+      },15);
+    }
+    setTimeout(typeNext,1800);
+  </script></body>
 </html>
