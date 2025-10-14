@@ -4,10 +4,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>F1 Cash — Simple Business Funding</title>
   <meta name="description" content="F1 Cash provides simple, fast working capital for small businesses with clear monthly payments and no collateral." />
-  <meta name="color-scheme" content="dark" /> <!-- Favicon / tab icon --> <link rel="icon" type="image/png" href="assets/logo.png" />
-  <link rel="apple-touch-icon" href="assets/logo.png" /> <!-- Futuristic fonts --> <link rel="preconnect" href="https://fonts.googleapis.com">
+  <meta name="color-scheme" content="dark" />  <!-- Favicon / tab icon -->  <link rel="icon" type="image/png" href="assets/logo.png" />
+  <link rel="apple-touch-icon" href="assets/logo.png" />  <!-- Futuristic fonts -->  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Exo+2:wght@400;600;800&display=swap" rel="stylesheet"> <style>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Exo+2:wght@400;600;800&display=swap" rel="stylesheet">  <style>
     :root{
       --bg-1:#05070d; --bg-2:#0b1220; --line:#1c2640;
       --ink:#e6ecff; --muted:#92a0c5;
@@ -29,15 +29,15 @@
       overflow:hidden; /* prevent accidental scroll */
     }
 
-    .wrap{max-width:var(--maxw);margin:0 auto;padding:36px 32px 24px;width:100%;opacity:0;transform:translateY(26px);filter:blur(8px);transition:opacity .9s ease,transform .9s ease,filter .9s ease}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:56px 36px 28px;width:100%;opacity:0;transform:translateY(26px);filter:blur(8px);transition:opacity .9s ease,transform .9s ease,filter .9s ease}
     .app-ready .wrap{opacity:1;transform:none;filter:blur(0)}
 
     /* HEADER */
-    header{display:flex;align-items:center;gap:18px;padding:18px 0 24px;border-bottom:1px solid var(--line)}
-    .logo img{width:96px;height:auto;border-radius:20px;box-shadow:0 10px 24px rgba(17,177,255,.24)}
+    header{display:flex;align-items:center;gap:18px;padding:28px 0 28px;border-bottom:1px solid var(--line)} /* more breathing room */
+    .logo img{width:102px;height:auto;border-radius:20px;box-shadow:0 10px 24px rgba(17,177,255,.24)}
     .brand{display:flex;align-items:center;gap:16px}
     .brand .title{display:flex;flex-direction:column;gap:4px}
-    .brand h1{font-family:'Orbitron',sans-serif;font-weight:700;font-size:26px;letter-spacing:.9px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;color:transparent}
+    .brand h1{font-family:'Orbitron',sans-serif;font-weight:700;font-size:28px;letter-spacing:.9px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;color:transparent}
     .brand p{color:var(--muted);font-size:14px}
 
     /* ELECTRIC intro for brand */
@@ -47,38 +47,47 @@
     @keyframes crtFlicker{0%,8%{opacity:.2; text-shadow:0 0 10px rgba(17,177,255,.7)} 20%{opacity:1} 35%{opacity:.35} 55%{opacity:1} 100%{opacity:1; text-shadow:0 0 12px rgba(17,177,255,.2)}}
 
     /* MAIN GRID */
-    main{display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:54px;min-height:74vh}
+    main{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:60px;min-height:74vh}
     .content{display:flex;flex-direction:column;justify-content:center}
 
-    h2{font-family:'Orbitron',sans-serif;font-weight:800;font-size:56px;line-height:1.06;margin:0 0 16px;background:linear-gradient(90deg,var(--accent),#7dd3fc);-webkit-background-clip:text;color:transparent}
+    h2{font-family:'Orbitron',sans-serif;font-weight:800;font-size:58px;line-height:1.06;margin:0 0 18px;background:linear-gradient(90deg,var(--accent),#7dd3fc);-webkit-background-clip:text;color:transparent}
     p.lead{color:#cfe0ff;line-height:1.68;margin:0 0 18px;font-size:1.12rem}
 
     /* Custom bullets */
-    ul{list-style:none;margin:0 0 22px 0}
-    li{position:relative;padding-left:28px;margin:8px 0;font-weight:600}
+    ul{list-style:none;margin:0 0 24px 0}
+    li{position:relative;padding-left:28px;margin:10px 0;font-weight:600}
     li::before{content:"";position:absolute;left:0;top:.55em;width:16px;height:10px;border-left:3px solid #00b7ff;border-top:3px solid #00b7ff;transform:skewX(-18deg) rotate(-45deg);filter:drop-shadow(0 0 6px rgba(17,177,255,.5))}
 
     .cta-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:12px}
     .apply-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(90deg,#00b7ff,#007aff);color:#fff;padding:14px 36px;border-radius:14px;font-weight:800;letter-spacing:.6px;box-shadow:0 12px 28px rgba(17,177,255,.28);font-family:'Orbitron',sans-serif;border:0;cursor:not-allowed}
     .note{font-size:13px;color:var(--muted)}
 
-    /* TERMS CARD — localized glow */
+    /* TERMS CARD — localized glow with hover-follow */
     .terms{position:relative}
+    .terms::before{content:"";position:absolute;inset:-14px;border-radius:24px;pointer-events:none;opacity:0;background:radial-gradient(380px 220px at var(--mx,50%) var(--my,50%), rgba(17,177,255,.20), transparent 65%);transition:opacity .25s ease}
+    .terms.is-hot::before{opacity:.75}
     .card{position:relative;background:linear-gradient(180deg,#0e1322,#0d1220);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:0 22px 48px rgba(0,0,0,.32),0 0 0 1px rgba(255,255,255,.05) inset,0 0 28px rgba(17,177,255,.18)}
     .card h3{color:#a8dfff;font-size:1.2rem;margin-bottom:10px;border-bottom:1px solid rgba(53,198,255,.18);padding-bottom:8px}
     .row{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center;margin:10px 0}
     .label{color:var(--muted);font-size:14px}
     .value{font-weight:800}
 
-    /* FOOTER */
-    footer{margin-top:auto;border-top:1px solid var(--line);padding:14px 32px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px}
-    footer a{color:#cfe9ff;text-decoration:none}
+    /* TERMS entrance (last piece) */
+    .terms{opacity:0;transform:translateY(18px);filter:blur(10px)}
+    .app-ready .terms{animation:termsIn .9s cubic-bezier(.22,.61,.36,1) .5s forwards}
+    @keyframes termsIn{to{opacity:1;transform:none;filter:blur(0)}}
 
-    /* SPLASH */
+    /* FOOTER (futuristic chips with icons) */
+    footer{margin-top:auto;border-top:1px solid var(--line);padding:20px 36px;display:flex;justify-content:space-between;align-items:center;gap:16px;color:var(--muted);font-size:14px;background:rgba(0,10,20,.22);backdrop-filter:saturate(125%) blur(2px)}
+    .foot-group{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;border:1px solid rgba(17,177,255,.26);background:linear-gradient(180deg,rgba(17,177,255,.06),rgba(17,177,255,.02));text-decoration:none;color:#d6eaff;font-weight:700}
+    .chip svg{width:16px;height:16px}
+
+    /* SPLASH (1 second pulse, then fade) */
     .splash{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:radial-gradient(1100px 800px at 50% -20%, #0c1325 0%, #06080f 65%, #05070d 100%),linear-gradient(120deg, var(--bg-1), var(--bg-2));}
-    .splash__logo{width:220px;height:auto;border-radius:22px;box-shadow:0 0 44px rgba(17,177,255,.45),0 0 0 2px rgba(255,255,255,.08) inset;animation:intro .9s ease-out both}
-    @keyframes intro{0%{opacity:0;transform:scale(.92)}60%{opacity:1;transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
-    .splash.is-fading{animation:fade .8s ease forwards}
+    .splash__logo{width:220px;height:auto;border-radius:22px;box-shadow:0 0 44px rgba(17,177,255,.45),0 0 0 2px rgba(255,255,255,.08) inset;animation:pulse1s 1s ease-in-out 1 both}
+    @keyframes pulse1s{0%{opacity:0;transform:scale(.92)}50%{opacity:1;transform:scale(1.05)}100%{opacity:1;transform:scale(1)}}
+    .splash.is-fading{animation:fade .5s ease forwards}
     @keyframes fade{to{opacity:0;visibility:hidden}}
 
     /* CLICK COIN */
@@ -95,10 +104,10 @@
     @media (max-width:540px){h2{font-size:34px}.apply-btn{width:100%;justify-content:center}}
   </style></head>
 <body>
-  <!-- Splash -->
+  <!-- Splash (1s pulse) -->
   <div class="splash" id="splash" aria-hidden="true">
     <img class="splash__logo" src="assets/logo.png" alt="F1 Cash logo">
-  </div> <div class="wrap" id="app">
+  </div>  <div class="wrap" id="app">
     <header>
       <div class="brand" id="brand">
         <div class="logo"><img src="assets/logo.png" alt="F1 Cash logo"></div>
@@ -122,7 +131,7 @@
     </div>
   </section>
 
-  <aside class="terms">
+  <aside class="terms" id="terms">
     <div class="card" aria-label="At-a-glance terms">
       <h3>At-a-glance terms</h3>
       <div class="row"><span class="label">Typical advance</span><span class="value">$300 – $1,000</span></div>
@@ -133,33 +142,43 @@
   </aside>
 </main>
 
-<footer>
-  <span>© <span id="year">2025</span> F1 Cash</span>
-  <span><a href="mailto:info@f1cash.net">info@f1cash.net</a> · <a href="tel:+12294484389">+1 229-448-4389</a></span>
-</footer>
-
-  </div> <script>
-    // Robust splash -> reveal -> typing sequence with click coin
+  </div>  <footer>
+    <div class="foot-group">© <span id="year">2025</span> F1 Cash</div>
+    <div class="foot-group">
+      <a class="chip" href="mailto:info@f1cash.net" aria-label="Email info@f1cash.net">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="#aee2ff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#aee2ff" stroke-width="1.5"/></svg>
+        info@f1cash.net
+      </a>
+      <a class="chip" href="tel:+12294484389" aria-label="Call +1 229 448 4389">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#aee2ff" stroke-width="1.5"/></svg>
+        +1 229-448-4389
+      </a>
+    </div>
+  </footer>  <script>
+    // Stable splash -> reveal -> typing, hover glow on terms, and click coin
     (function(){
       const splash = document.getElementById('splash');
-      const brand = document.getElementById('brand');
+      const brand  = document.getElementById('brand');
+      const terms  = document.getElementById('terms');
 
       function forceReveal(){
         if(document.body.classList.contains('app-ready')) return;
         if(splash) splash.style.display='none';
         document.body.classList.add('app-ready');
-        if(brand){ brand.classList.add('electric'); setTimeout(()=>brand.classList.remove('electric'), 1100); }
+        if(brand){ brand.classList.add('electric'); setTimeout(()=>brand.classList.remove('electric'), 1000); }
         startTyping();
       }
       function begin(){
         if(!splash){ forceReveal(); return; }
-        splash.classList.add('is-fading');
-        const timeout = setTimeout(forceReveal, 1200);
-        splash.addEventListener('animationend', ()=>{ clearTimeout(timeout); forceReveal(); }, {once:true});
+        // 1s pulse already running, fade immediately after
+        setTimeout(()=>{
+          splash.classList.add('is-fading');
+          const t = setTimeout(forceReveal, 600);
+          splash.addEventListener('animationend', ()=>{ clearTimeout(t); forceReveal(); }, {once:true});
+        }, 1000);
       }
-      // Start quickly on DOM ready; hard failsafe after 2.5s
-      document.addEventListener('DOMContentLoaded', ()=> setTimeout(begin, 150));
-      setTimeout(forceReveal, 2500);
+      document.addEventListener('DOMContentLoaded', begin);
+      setTimeout(forceReveal, 3000);
 
       // Typewriter bullets
       function startTyping(){
@@ -170,7 +189,24 @@
         setTimeout(typeNext, 200);
       }
 
-      // Click coin
+      // Follow glow over terms card
+      if(terms){
+        const onMove = (e)=>{
+          const r = terms.getBoundingClientRect();
+          const x = ((e.clientX - r.left) / r.width) * 100;
+          const y = ((e.clientY - r.top) / r.height) * 100;
+          terms.style.setProperty('--mx', x+'%');
+          terms.style.setProperty('--my', y+'%');
+        };
+        terms.addEventListener('mouseenter', ()=> terms.classList.add('is-hot'));
+        terms.addEventListener('mouseleave', ()=> terms.classList.remove('is-hot'));
+        window.addEventListener('mousemove', (e)=>{
+          if(!terms.classList.contains('is-hot')) return;
+          onMove(e);
+        }, {passive:true});
+      }
+
+      // Click coin anywhere
       window.addEventListener('click',(e)=>{
         const c=document.createElement('div'); c.className='coin'; c.style.left=e.clientX+'px'; c.style.top=e.clientY+'px'; document.body.appendChild(c); setTimeout(()=>c.remove(),700);
       });
