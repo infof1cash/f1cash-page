@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>F1 Cash — Simple Business Funding</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="F1 Cash provides simple, fast working capital for small businesses.">
+  <style>
+    :root{
+      --navy:#0b1220;
+      --ink:#0f172a;
+      --muted:#64748b;
+      --line:#e5e7eb;
+      --accent:#1e90ff; /* electric blue accent */
+      --bg:#ffffff;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+    .wrap{max-width:980px;margin:0 auto;padding:32px 20px}
+    header{display:flex;align-items:center;justify-content:space-between;padding:8px 0 20px;border-bottom:1px solid var(--line)}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit}
+    .logo{
+      width:40px;height:40px;border-radius:10px;
+      background:linear-gradient(145deg,#0d1834 0%,#101b3e 60%,#0b1220 100%);
+      display:grid;place-items:center;box-shadow:0 6px 16px rgba(11,18,32,.15);
+    }
+    .logo:before{
+      content:"F"; font-weight:800; color:#e8eefc; font-size:20px; letter-spacing:.5px;
+    }
+    .brandname{font-weight:800;letter-spacing:.5px}
+    .tag{color:var(--muted);font-size:14px;margin-top:2px}
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center;padding:32px 0}
+    .h1{font-size:40px;line-height:1.15;margin:0 0 12px}
+    .lead{color:var(--muted);font-size:18px;margin:0 0 20px}
+    ul.features{margin:14px 0 26px;padding:0 0 0 18px;color:var(--ink)}
+    .card{
+      border:1px solid var(--line);border-radius:16px;padding:20px;background:#fafcff;
+    }
+    .cta{
+      appearance:none;border:0;border-radius:12px;
+      padding:14px 20px;font-weight:700;letter-spacing:.3px;
+      background:var(--accent);color:#fff;cursor:not-allowed;opacity:.55;
+    }
+    .cta[disabled]{pointer-events:none}
+    .note{font-size:12px;color:var(--muted);margin-top:8px}
+    .divider{height:1px;background:var(--line);margin:24px 0}
+    footer{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px}
+    .contact a{color:var(--navy);text-decoration:none}
+    @media (max-width:860px){
+      .hero{grid-template-columns:1fr}
+      .h1{font-size:32px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="#">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <div class="brandname">F1 CASH</div>
+          <div class="tag">Simple Business Funding</div>
+        </div>
+      </a>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h1 class="h1">Fast working capital for small businesses — no collateral, no hassle.</h1>
+        <p class="lead">Get up to $1,000 with a straightforward monthly plan. First payment in 35 days. Clear terms. Human support.</p>
+        <ul class="features">
+          <li>Business owners only — 12+ months in business, active business bank account</li>
+          <li>Simple promissory note &amp; ID/address verification</li>
+          <li>6 equal monthly installments · ACH payments</li>
+        </ul>
+        <button class="cta" disabled aria-disabled="true" title="Coming soon">APPLY NOW</button>
+        <div class="note">Button disabled for now — application link coming soon.</div>
+      </div>
+
+      <div class="card" role="complementary" aria-label="At-a-glance terms">
+        <strong>At-a-glance terms</strong>
+        <div class="divider"></div>
+        <div>Typical advance: <b>$300–$1,000</b></div>
+        <div>Schedule: <b>6 monthly payments</b></div>
+        <div>Repayment: <b>ACH you send</b></div>
+        <div>Support: <b>info@f1cash.net</b></div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <footer>
+      <div class="contact">
+        ✉️ <a href="mailto:info@f1cash.net">info@f1cash.net</a> &nbsp;·&nbsp;
+        ☎️ <a href="tel:+12294484389">+1 229-448-4389</a>
+      </div>
+      <div>© 2025 F1 Cash · All rights reserved.</div>
+    </footer>
+  </div>
+</body>
+</html>
