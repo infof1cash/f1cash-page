@@ -10,182 +10,139 @@
 
 <style>
 :root{
-  --bg-0:#04060b; --bg-1:#05070d; --bg-2:#0b1220;
-  --line:#18233a; --ink:#e6ecff; --muted:#95a7cf;
-  --accent:#11b1ff; --accent2:#6ee7ff; --success:#24ff90;
-
-  /* splash controls (JS updates) */
-  --logo-bright:0;  /* 0..1 */
-  --logo-glow:0;    /* 0..1 */
-  --logo-scale:1;   /* 1..1.05 */
+  --bg-1:#05070d; --bg-2:#0b1220; --ink:#e6ecff; --muted:#95a7cf;
+  --line:#18233a; --accent:#11b1ff; --accent2:#6ee7ff; --success:#24ff90;
+  /* splash runtime controls */
+  --logo-bright:0; --logo-glow:0; --logo-scale:1;
 }
 
-/* Reset */
+/* ---------- Base ---------- */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
   color:var(--ink);
   background:
-    radial-gradient(1400px 900px at 12% -8%, rgba(16,30,60,.72) 0, rgba(9,14,26,.55) 45%, rgba(7,10,18,0) 80%),
-    radial-gradient(1100px 800px at 80% 10%, rgba(20,55,90,.55) 0, rgba(10,18,36,.35) 50%, rgba(7,10,18,0) 85%),
-    radial-gradient(1200px 900px at 60% 85%, rgba(14,28,55,.40) 0, rgba(9,14,27,.22) 55%, rgba(7,10,18,0) 92%),
+    radial-gradient(1200px 900px at 12% -8%, rgba(16,30,60,.65) 0, rgba(9,14,26,.45) 45%, rgba(7,10,18,0) 80%),
+    radial-gradient(1100px 800px at 80% 10%, rgba(20,55,90,.48) 0, rgba(10,18,36,.3) 50%, rgba(7,10,18,0) 85%),
     linear-gradient(120deg, var(--bg-1), var(--bg-2));
-  font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility;
+  font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
   overflow-x:hidden;
 }
-body::after{ /* subtle grain to prevent banding */
-  content:""; position:fixed; inset:0; pointer-events:none; z-index:-1; opacity:.22; mix-blend-mode:overlay;
+body::after{ /* fine grain to avoid banding */
+  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.18; mix-blend-mode:overlay;
   background-image:
-    radial-gradient(1px 1px at 15% 12%, rgba(255,255,255,.035) 0, transparent 55%),
-    radial-gradient(1px 1px at 35% 78%, rgba(255,255,255,.03) 0, transparent 55%),
-    radial-gradient(1px 1px at 72% 32%, rgba(255,255,255,.032) 0, transparent 55%),
-    radial-gradient(1px 1px at 88% 64%, rgba(255,255,255,.028) 0, transparent 55%),
-    radial-gradient(1px 1px at 52% 52%, rgba(0,0,0,.035) 0, transparent 55%);
+    radial-gradient(1px 1px at 20% 18%, rgba(255,255,255,.035) 0, transparent 55%),
+    radial-gradient(1px 1px at 68% 40%, rgba(255,255,255,.03) 0, transparent 55%),
+    radial-gradient(1px 1px at 48% 72%, rgba(255,255,255,.028) 0, transparent 55%);
 }
 
-/* ================= SPLASH ================= */
+/* ---------- Splash (no rectangles, full cover) ---------- */
+body.splash-lock{overflow:hidden}
 .splash{
-  position:fixed; inset:0; z-index:9999; display:grid; place-items:center;
-  opacity:1; visibility:visible; will-change:opacity;
-  transition:opacity .6s ease, visibility .6s ease;
-  background:transparent;
+  position:fixed; inset:0; z-index:10000; display:grid; place-items:center;
+  opacity:1; visibility:visible; transition:opacity .7s ease, visibility .7s ease;
+}
+.splash::before{ /* soft cover so nothing underneath shows */
+  content:""; position:absolute; inset:0;
+  background:
+    radial-gradient(900px 600px at 50% 38%, rgba(17,177,255,.12), rgba(17,177,255,0) 70%),
+    linear-gradient(120deg, rgba(5,7,13,.88), rgba(7,12,24,.88));
+  backdrop-filter:saturate(120%) blur(2px);
 }
 .splash.is-fade{opacity:0}
 .splash.is-hide{opacity:0; visibility:hidden}
-.stage{display:grid; place-items:center; gap:16px}
+.stage{position:relative; z-index:1; display:grid; place-items:center; gap:16px}
 
-/* Clean, masked logo: black pixels removed using luminance mask; rounded corners preserved */
-.slogo{ /* base animation variables reused */
-  transform:scale(var(--logo-scale));
-  animation:pulse 3.6s ease-in-out infinite;
+/* Logos: image only, NO background/boxes, rounded by the PNG itself.
+   'screen' blending removes any dark halo; drop-shadow = neon. */
+.slogo{
+  width:min(56vw,380px); height:auto; transform:scale(var(--logo-scale));
+  background:transparent; border-radius:24px; /* respects rounded edges of PNG */
+  image-rendering:auto;
+  mix-blend-mode:screen; /* kill dark pixels from source */
   filter:
-    brightness(calc(.70 + .90*var(--logo-bright)))
-    contrast(calc(1 + .30*var(--logo-bright)))
-    saturate(calc(1 + .30*var(--logo-bright)))
+    brightness(calc(.72 + .9*var(--logo-bright)))
+    contrast(calc(1 + .3*var(--logo-bright)))
+    saturate(calc(1 + .3*var(--logo-bright)))
     drop-shadow(0 0 calc(60px*var(--logo-glow)) rgba(17,177,255,.9));
+  animation:slogoPulse 3.6s ease-in-out infinite;
 }
-.slogo-mask{
-  width:min(54vw,380px); height:min(54vw,380px);
-  border-radius:28px; /* rounded edges for the tile */
-  background:
-    radial-gradient(96% 96% at 50% 50%, rgba(17,177,255, calc(.85*var(--logo-bright))), rgba(17,177,255,0) 70%),
-    linear-gradient(180deg, #c4ffff, #0192e6);
-  /* Use the PNG as a luminance mask so the black background vanishes */
-  -webkit-mask: url("assets/logo.png") center/contain no-repeat;
-          mask: url("assets/logo.png") center/contain no-repeat;
-  -webkit-mask-mode: luminance; mask-mode: luminance;
-  -webkit-mask-composite: source-over;
-          mask-composite: add;
-  background-clip: border-box;
-}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.015)}}
+@keyframes slogoPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.015)}}
 
 /* Progress + messages */
-.progress{
-  width:min(76vw,560px); height:10px; border-radius:999px; overflow:hidden;
-  background:linear-gradient(180deg, rgba(12,18,30,.6), rgba(10,16,26,.4));
-  border:1px solid rgba(120,170,240,.18);
-  box-shadow:inset 0 0 1px rgba(255,255,255,.05), 0 6px 18px rgba(0,0,0,.25);
-}
-.bar{width:0%; height:100%;
-  background:linear-gradient(90deg, #00b7ff, #11b1ff, #6ee7ff);
-  box-shadow:0 0 18px rgba(17,177,255,.35); transition:width .28s ease}
-.msg{
-  font-family:'Orbitron',sans-serif; letter-spacing:1.8px; text-transform:uppercase;
-  font-size:clamp(.8rem,.9rem,1rem); color:#a9cfff; text-align:center; margin-top:10px; opacity:.95
-}
-.approved{display:none; align-items:center; gap:10px; justify-content:center; margin-top:6px}
-.approved .text{
-  font-family:'Orbitron',sans-serif; letter-spacing:2px; text-transform:uppercase;
-  color:var(--success); font-size:1rem; text-shadow:0 0 10px var(--success), 0 0 20px var(--success);
-  animation:pop .42s cubic-bezier(.2,1.6,.2,1) both
-}
-.check{ width:22px; height:22px; border-radius:50%;
-  background: radial-gradient(circle, #00ff95 0 60%, rgba(0,0,0,0) 61%);
-  position:relative; box-shadow:0 0 12px rgba(36,255,144,.7); animation:pop .42s .02s both cubic-bezier(.2,1.6,.2,1) }
-.check::after{ content:""; position:absolute; left:6px; top:9px; width:8px; height:4px; border:2px solid #002b17; border-top:none; border-right:none; transform:rotate(-45deg) }
-@keyframes pop{0%{transform:scale(.7);opacity:0}70%{transform:scale(1.09);opacity:1}100%{transform:scale(1)}
+.progress{width:min(76vw,560px); height:10px; border-radius:999px; overflow:hidden;
+  background:linear-gradient(180deg, rgba(12,18,30,.6), rgba(10,16,26,.45));
+  border:1px solid rgba(120,170,240,.18); box-shadow:inset 0 0 1px rgba(255,255,255,.05), 0 6px 18px rgba(0,0,0,.25)}
+.bar{height:100%; width:0%; background:linear-gradient(90deg,#00b7ff,#11b1ff,#6ee7ff); box-shadow:0 0 18px rgba(17,177,255,.35); transition:width .28s ease}
+.msg{font-family:'Orbitron',sans-serif; letter-spacing:1.8px; text-transform:uppercase; font-size:.95rem; color:#a9cfff}
+.approved{display:none; align-items:center; gap:10px; justify-content:center}
+.approved .text{font-family:'Orbitron',sans-serif; letter-spacing:2px; text-transform:uppercase; color:var(--success); text-shadow:0 0 10px var(--success),0 0 20px var(--success); animation:pop .42s cubic-bezier(.2,1.6,.2,1) both}
+.check{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,#00ff95 0 60%,transparent 61%);box-shadow:0 0 12px rgba(36,255,144,.7);position:relative;animation:pop .42s .02s both cubic-bezier(.2,1.6,.2,1)}
+.check::after{content:"";position:absolute;left:6px;top:9px;width:8px;height:4px;border:2px solid #002b17;border-top:none;border-right:none;transform:rotate(-45deg)}
+@keyframes pop{0%{transform:scale(.7);opacity:0}70%{transform:scale(1.1);opacity:1}100%{transform:scale(1)}}
 
-/* ================= PAGE ================= */
-.page{min-height:100svh; display:flex; flex-direction:column; opacity:0; transform:translateY(8px); visibility:hidden; transition:opacity .6s ease, transform .6s ease}
+/* ---------- Page ---------- */
+.page{min-height:100svh; display:flex; flex-direction:column; opacity:0; transform:translateY(8px); visibility:hidden; transition:opacity .7s ease, transform .7s ease}
 .page-on .page{opacity:1; visibility:visible; transform:none}
-.wrap{max-width:1200px; width:100%; margin:0 auto; padding:26px 28px; flex:1}
+.wrap{max-width:1200px; margin:0 auto; padding:26px 20px; flex:1}
 
-/* Header: logo left (masked), title centered */
-header{
-  display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:16px;
-  padding:12px 0 22px; border-bottom:1px solid var(--line)
-}
+/* Header: logo left (no box), title centered */
+header{display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:16px; padding:12px 0 22px; border-bottom:1px solid var(--line)}
 .header-left{display:flex;align-items:center}
-.brand-logo{position:relative; width:112px; height:112px; display:grid; place-items:center}
-.brand-logo-mask{
-  width:100%; height:100%; border-radius:24px;
-  background:
-    radial-gradient(96% 96% at 50% 50%, rgba(17,177,255,.95), rgba(17,177,255,0) 70%),
-    linear-gradient(180deg, #b7fbff, #0a86de);
-  -webkit-mask: url("assets/logo.png") center/contain no-repeat;
-          mask: url("assets/logo.png") center/contain no-repeat;
-  -webkit-mask-mode: luminance; mask-mode: luminance;
+.brand-logo{width:112px; height:112px; display:grid; place-items:center}
+.brand-logo img{
+  width:100%; height:auto; background:transparent; mix-blend-mode:screen;
   filter:drop-shadow(0 0 28px rgba(17,177,255,.55)) drop-shadow(0 0 8px rgba(17,177,255,.35));
+  border-radius:20px;
 }
 .header-center{text-align:center}
 .header-center h1{
-  font-family:'Orbitron',sans-serif;font-weight:800;font-size:42px;line-height:1;letter-spacing:.8px;
-  background:linear-gradient(90deg,var(--accent),#7dd3fc); -webkit-background-clip:text; background-clip:text; color:transparent}
-.header-center p{color:#a9bce6;font-size:18px;margin-top:8px}
+  font-family:'Orbitron',sans-serif; font-weight:800; font-size:42px; line-height:1; letter-spacing:.8px;
+  background:linear-gradient(90deg,var(--accent),#7dd3fc); -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.header-center p{color:#a9bce6; font-size:18px; margin-top:8px}
 .header-right{width:112px}
 
-/* Main */
-main{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:36px;padding:28px 0}
+/* Main content */
+main{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; gap:36px; padding:28px 0}
 .content{flex:1 1 560px}
 h2{
-  font-family:'Orbitron',sans-serif; font-weight:800; font-size:46px; line-height:1.12;
-  margin:0 0 12px; letter-spacing:.3px;
+  font-family:'Orbitron',sans-serif; font-weight:800; font-size:46px; line-height:1.12; margin:0 0 12px; letter-spacing:.3px;
   background:linear-gradient(90deg,var(--accent),#7dd3fc); -webkit-background-clip:text; background-clip:text; color:transparent;
-  filter:drop-shadow(0 6px 18px rgba(17,177,255,.12));
 }
-p{color:#b6c3da;line-height:1.6;margin-bottom:22px;font-size:1.05rem}
-ul{list-style:disc;margin-left:20px;margin-bottom:22px} li{margin-bottom:8px}
-.apply-btn{display:inline-block;background:linear-gradient(90deg,#00b7ff,#007aff);color:#fff;padding:14px 34px;border-radius:12px;font-weight:800;letter-spacing:.6px;box-shadow:0 10px 26px rgba(17,177,255,.28);cursor:not-allowed;opacity:.78;font-family:'Orbitron',sans-serif}
-.note{font-size:12.5px;color:var(--muted);margin-top:8px}
+p{color:#b6c3da; line-height:1.6; margin-bottom:22px; font-size:1.05rem}
+ul{list-style:disc; margin-left:20px; margin-bottom:22px} li{margin-bottom:8px}
+.apply-btn{display:inline-block; background:linear-gradient(90deg,#00b7ff,#007aff); color:#fff; padding:14px 34px; border-radius:12px; font-weight:800; letter-spacing:.6px; box-shadow:0 10px 26px rgba(17,177,255,.28); cursor:not-allowed; opacity:.78; font-family:'Orbitron',sans-serif}
+.note{font-size:12.5px; color:var(--muted); margin-top:8px}
 
-/* Terms card */
+/* Terms card (unchanged) */
 .card{
   --gd:rgba(20,30,55,.86);
-  position:relative; flex:1 1 420px;
-  background:radial-gradient(180% 140% at 0% 0%, rgba(17,177,255,.08), transparent 60%), linear-gradient(180deg, var(--gd), rgba(13,18,32,.82));
-  border:1px solid rgba(120,170,240,.16); border-radius:18px; padding:18px 18px 16px;
-  box-shadow:0 20px 46px rgba(0,0,0,.4), inset 0 0 1px rgba(255,255,255,.05); overflow:hidden;
+  flex:1 1 420px; background:radial-gradient(180% 140% at 0% 0%, rgba(17,177,255,.08), transparent 60%), linear-gradient(180deg, var(--gd), rgba(13,18,32,.82));
+  border:1px solid rgba(120,170,240,.16); border-radius:18px; padding:18px; box-shadow:0 20px 46px rgba(0,0,0,.4), inset 0 0 1px rgba(255,255,255,.05)
 }
 .card h3{ color:#c9e7ff; font-size:1.12rem; margin:2px 0 10px; border-bottom:1px solid rgba(120,170,240,.18); padding-bottom:10px }
-.row{display:grid;grid-template-columns:150px 1fr;gap:8px 12px;align-items:center;margin:10px 0}
-.label{color:#9fb3da;font-size:15px;display:flex;align-items:center;gap:8px}
-.value{font-weight:800;color:#e8f2ff;font-size:1.02rem}
-.icon{width:16px;height:16px;display:inline-grid;place-items:center}
-.icon svg{width:16px;height:16px}
+.row{display:grid; grid-template-columns:150px 1fr; gap:8px 12px; align-items:center; margin:10px 0}
+.label{color:#9fb3da; font-size:15px; display:flex; align-items:center; gap:8px}
+.value{font-weight:800; color:#e8f2ff; font-size:1.02rem}
+.icon{width:16px; height:16px; display:inline-grid; place-items:center}
+.icon svg{width:16px; height:16px}
 a:any-link{color:#a8dfff}
 
 /* Footer */
-footer{
-  margin-top:auto; padding:18px 28px;
-  background:linear-gradient(180deg, rgba(6,10,20,.55), rgba(6,10,20,.35));
-  backdrop-filter:saturate(130%) blur(6px);
-  border-top:1px solid rgba(150,190,255,.12)
-}
-.footer-row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto }
-.dock{ display:flex; gap:10px; flex-wrap:wrap }
-.chip{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:12px;
-  background:linear-gradient(180deg, rgba(14,24,42,.35), rgba(10,16,28,.22));
-  border:1px solid rgba(120,170,240,.16); color:#cfe6ff; font-size:14px }
-.chip svg{width:16px;height:16px}
+footer{margin-top:auto; padding:18px 20px; background:linear-gradient(180deg, rgba(6,10,20,.55), rgba(6,10,20,.35)); backdrop-filter:saturate(130%) blur(6px); border-top:1px solid rgba(150,190,255,.12)}
+.footer-row{display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto}
+.dock{display:flex; gap:10px; flex-wrap:wrap}
+.chip{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:12px; background:linear-gradient(180deg, rgba(14,24,42,.35), rgba(10,16,28,.22)); border:1px solid rgba(120,170,240,.16); color:#cfe6ff; font-size:14px}
+.chip svg{width:16px; height:16px}
 .chip a{color:#cfe6ff; text-decoration:none}
 .chip a:hover{text-decoration:underline}
 
-/* Responsive */
+/* Responsive tweaks */
 @media (max-width:960px){
   .wrap{padding:16px}
-  .brand-logo{width:90px;height:90px}
+  .brand-logo{width:90px; height:90px}
   .header-center h1{font-size:32px}
   .header-center p{font-size:15.5px}
   h2{font-size:36px}
@@ -198,91 +155,90 @@ footer{
 }
 </style>
 </head>
-<body>
-  <!-- ===== Splash ===== -->
-  <div class="splash" id="splash" aria-hidden="true">
-    <div class="stage">
-      <!-- Masked logo: no black rectangle, rounded edges -->
-      <div class="slogo slogo-mask" aria-label="F1 Cash logo"></div>
+<body class="splash-lock">
 
-      <div class="progress" aria-label="Loading">
-        <div class="bar" id="bar"></div>
-      </div>
-      <div class="msg" id="msg">AUTHORIZING…</div>
-      <div class="approved" id="approved">
-        <span class="check" aria-hidden="true"></span>
-        <span class="text">ACCESS APPROVED</span>
-      </div>
+<!-- Splash -->
+<div class="splash" id="splash" aria-hidden="true">
+  <div class="stage">
+    <!-- IMPORTANT: image tag with screen blend to remove any black box -->
+    <img src="assets/logo.png" alt="F1 Cash logo" class="slogo" id="slogo">
+    <div class="progress" aria-label="Loading"><div class="bar" id="bar"></div></div>
+    <div class="msg" id="msg">AUTHORIZING…</div>
+    <div class="approved" id="approved">
+      <span class="check" aria-hidden="true"></span>
+      <span class="text">ACCESS APPROVED</span>
     </div>
   </div>
+</div>
 
-  <!-- ===== Page ===== -->
-  <div class="page">
-    <div class="wrap">
-      <header>
-        <div class="header-left">
-          <!-- Masked header logo -->
-          <div class="brand-logo"><div class="brand-logo-mask" aria-label="F1 Cash"></div></div>
+<!-- Page -->
+<div class="page">
+  <div class="wrap">
+    <header>
+      <div class="header-left">
+        <div class="brand-logo">
+          <img src="assets/logo.png" alt="F1 Cash">
         </div>
-        <div class="header-center">
-          <h1>F1 CASH</h1>
-          <p>Simple Business Funding</p>
-        </div>
-        <div class="header-right"></div>
-      </header>
+      </div>
+      <div class="header-center">
+        <h1>F1 CASH</h1>
+        <p>Simple Business Funding</p>
+      </div>
+      <div class="header-right"></div>
+    </header>
 
-      <main>
-        <div class="content">
-          <h2>Fast working capital for small businesses</h2>
-          <p>Funding up to $1,000 with clear monthly payments and no collateral or hard credit pulls.</p>
-          <ul>
-            <li>Business owners with 12+ months in operation</li>
-            <li>Simple promissory note after verification</li>
-            <li>6 equal monthly installments</li>
-          </ul>
-          <a class="apply-btn" aria-disabled="true" title="Coming soon">APPLY NOW</a>
-          <p class="note">Button disabled for now — application link coming soon.</p>
-        </div>
+    <main>
+      <div class="content">
+        <h2>Fast working capital for small businesses</h2>
+        <p>Funding up to $1,000 with clear monthly payments and no collateral or hard credit pulls.</p>
+        <ul>
+          <li>Business owners with 12+ months in operation</li>
+          <li>Simple promissory note after verification</li>
+          <li>6 equal monthly installments</li>
+        </ul>
+        <a class="apply-btn" aria-disabled="true" title="Coming soon">APPLY NOW</a>
+        <p class="note">Button disabled for now — application link coming soon.</p>
+      </div>
 
-        <aside class="card" aria-label="At-a-glance terms">
-          <h3>At-a-glance terms</h3>
-          <div class="row"><span class="label">Typical advance</span><span class="value">$300 – $1,000</span></div>
-          <div class="row"><span class="label">Schedule</span><span class="value">6 monthly payments</span></div>
-          <div class="row">
-            <span class="label"><span class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="#9ecaff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#9ecaff" stroke-width="1.5"/></svg>
-            </span> Support</span>
-            <span class="value"><a href="mailto:info@f1cash.net">info@f1cash.net</a></span>
-          </div>
-          <div class="row">
-            <span class="label"><span class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
-            </span> Phone</span>
-            <span class="value"><a href="tel:+12294484389">+1 229-448-4389</a></span>
-          </div>
-        </aside>
-      </main>
-    </div>
-
-    <footer>
-      <div class="footer-row">
-        <div class="dock">
-          <span class="chip">
+      <aside class="card" aria-label="At-a-glance terms">
+        <h3>At-a-glance terms</h3>
+        <div class="row"><span class="label">Typical advance</span><span class="value">$300 – $1,000</span></div>
+        <div class="row"><span class="label">Schedule</span><span class="value">6 monthly payments</span></div>
+        <div class="row">
+          <span class="label"><span class="icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="#9ecaff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#9ecaff" stroke-width="1.5"/></svg>
-            <a href="mailto:info@f1cash.net">info@f1cash.net</a>
-          </span>
-          <span class="chip">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
-            <a href="tel:+12294484389">+1 229-448-4389</a>
-          </span>
+          </span> Support</span>
+          <span class="value"><a href="mailto:info@f1cash.net">info@f1cash.net</a></span>
         </div>
+        <div class="row">
+          <span class="label"><span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
+          </span> Phone</span>
+          <span class="value"><a href="tel:+12294484389">+1 229-448-4389</a></span>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <footer>
+    <div class="footer-row">
+      <div class="dock">
         <span class="chip">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M5 11a7 7 0 0 1 14 0v2h1a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h1v-2Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
-          Secure · © 2025 F1 Cash
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="#9ecaff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#9ecaff" stroke-width="1.5"/></svg>
+          <a href="mailto:info@f1cash.net">info@f1cash.net</a>
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
+          <a href="tel:+12294484389">+1 229-448-4389</a>
         </span>
       </div>
-    </footer>
-  </div>
+      <span class="chip">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 11a7 7 0 0 1 14 0v2h1a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h1v-2Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
+        Secure · © 2025 F1 Cash
+      </span>
+    </div>
+  </footer>
+</div>
 
 <script>
 (function(){
@@ -290,15 +246,14 @@ footer{
   const splash = document.getElementById('splash');
   const bar = document.getElementById('bar');
   const approved = document.getElementById('approved');
-
   function fadeOutSplash(){
-    bar.style.transition='none';
     requestAnimationFrame(()=> {
       splash.classList.add('is-fade');
       splash.addEventListener('transitionend', function onEnd(e){
         if (e.propertyName === 'opacity'){
           splash.removeEventListener('transitionend', onEnd);
           splash.classList.add('is-hide');
+          document.body.classList.remove('splash-lock');
         }
       });
     });
@@ -313,31 +268,19 @@ footer{
     root.style.setProperty('--logo-scale','1.03');
     setTimeout(()=>{ fadeOutSplash(); revealPage(); }, 700);
   }
-
   // steady progress to 85%, then approve
   (function run(){
-    const start = performance.now();
-    const DURATION = 3400, APPROVE_AT = 0.85;
+    const start = performance.now(), DURATION = 3400, APPROVE_AT = 0.85;
     function tick(now){
       const t = Math.min(1, (now - start) / DURATION);
       bar.style.width = (Math.min(t,APPROVE_AT)*100).toFixed(1) + '%';
-      const glow = Math.pow(t, 0.75);
+      const glow = Math.pow(t, .75);
       root.style.setProperty('--logo-bright', glow.toFixed(3));
       root.style.setProperty('--logo-glow',   glow.toFixed(3));
-      if (t < APPROVE_AT){ requestAnimationFrame(tick); }
-      else { approveSequence(); }
+      if (t < APPROVE_AT) requestAnimationFrame(tick); else approveSequence();
     }
     requestAnimationFrame(tick);
   })();
-
-  // optional manual skip
-  document.addEventListener('pointerdown', function once(){
-    approveSequence();
-    document.removeEventListener('pointerdown', once);
-  }, { once:true });
-
-  // failsafe
-  setTimeout(()=>{ if (!document.body.classList.contains('page-on')) approveSequence(); }, 7000);
 })();
 </script>
 </body>
