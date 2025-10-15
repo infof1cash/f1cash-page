@@ -162,7 +162,18 @@ header{
 .logo{
   width:112px; height:112px; position:relative;
 }
-.logo img{width:100%;height:100%;object-fit:cover;mix-blend-mode:screen;opacity:.98}
+
+/* === FIXED: header logo uses mask instead of blend so no rectangle === */
+.logo-mark{
+  width:100%; height:100%;
+  -webkit-mask: url("assets/logo.png") center/contain no-repeat;
+          mask: url("assets/logo.png") center/contain no-repeat;
+  background:
+    radial-gradient(94% 94% at 50% 50%, rgba(17,177,255,.78), rgba(17,177,255,0) 70%),
+    linear-gradient(180deg, rgba(170,255,255,1), rgba(0,120,220,1));
+  filter: drop-shadow(0 0 28px rgba(17,177,255,.45));
+}
+
 .header-center{ text-align:center }
 .header-center h1{
   font-family:'Orbitron',sans-serif;font-weight:800;font-size:42px;line-height:1;letter-spacing:.8px;
@@ -265,7 +276,8 @@ footer{ margin-top:auto; padding:18px 28px; background:linear-gradient(180deg, r
       <header>
         <div class="header-left">
           <div class="logo">
-            <img src="assets/logo.png" alt="F1 Cash Logo">
+            <!-- FIX: masked logo (no rectangular glow) -->
+            <div class="logo-mark" aria-label="F1 Cash Logo"></div>
           </div>
         </div>
         <div class="header-center">
@@ -315,104 +327,5 @@ footer{ margin-top:auto; padding:18px 28px; background:linear-gradient(180deg, r
       <div class="footer-row">
         <div class="dock">
           <span class="chip">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="#9ecaff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#9ecaff" stroke-width="1.5"/></svg>
-            <a href="mailto:info@f1cash.net">info@f1cash.net</a>
-          </span>
-          <span class="chip">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
-            <a href="tel:+12294484389">+1 229-448-4389</a>
-          </span>
-        </div>
-        <span class="chip">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M5 11a7 7 0 0 1 14 0v2h1a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h1v-2Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
-          Secure · © 2025 F1 Cash
-        </span>
-      </div>
-    </footer>
-  </div>
-
-<script>
-(function(){
-  var root = document.documentElement;
-  var splash = document.getElementById('splash');
-  var approved = document.getElementById('approved');
-  var label = document.getElementById('label');
-  var bar = document.getElementById('bar');
-  var veil = document.getElementById('veil');
-
-  // Build veil tiles immediately with precomputed delays for the flip cascade
-  (function buildVeil(){
-    var cols = 22, rows = 12, frag = document.createDocumentFragment();
-    for (var r=0;r<rows;r++){
-      for (var c=0;c<cols;c++){
-        var t = document.createElement('div'); t.className='tile';
-        // stagger by distance from center
-        var dist = Math.hypot(c-cols/2, r-rows/2);
-        var delay = Math.round(dist*22 + (Math.random()*50));
-        t.style.setProperty('--d', delay+'ms');
-        frag.appendChild(t);
-      }
-    }
-    veil.appendChild(frag);
-  })();
-
-  function flipOutVeil(){
-    veil.querySelectorAll('.tile').forEach(function(t){ t.classList.add('flip'); });
-    setTimeout(function(){ veil.remove(); }, 1100);
-  }
-
-  function revealPage(){
-    document.body.classList.add('page-on');
-    splash.classList.add('is-fading');
-    splash.addEventListener('transitionend', function onEnd(e){
-      if (e.propertyName === 'opacity'){ splash.removeEventListener('transitionend', onEnd); splash.classList.add('is-hidden'); }
-    });
-  }
-
-  function approveSequence(){
-    // show approved under the AUTHORIZING label, then complete to 100%
-    approved.style.display='flex';
-    // complete the bar smoothly
-    bar.style.transition='width 1s ease';
-    bar.style.width='100%';
-    // brighten logo a touch more
-    root.style.setProperty('--logo-bright','1');
-    root.style.setProperty('--logo-glow','1');
-    // flip rectangles and reveal
-    flipOutVeil();
-    setTimeout(revealPage, 700);
-  }
-
-  // Smooth progress to 85% (steady pace), then approve
-  (function run(){
-    var start = performance.now(),
-        DURATION = 3200,       // slower, steady
-        APPROVE_AT = 0.85;     // approve at 85%
-    function tick(now){
-      var t = Math.min(1, (now - start) / DURATION);
-      var shown = Math.min(t, APPROVE_AT);
-      bar.style.width = (shown*100).toFixed(1) + '%';
-      // glow ramp—brighter earlier but still smooth
-      var glow = Math.pow(t, 0.75);
-      root.style.setProperty('--logo-bright', glow.toFixed(3));
-      root.style.setProperty('--logo-glow',   glow.toFixed(3));
-      if (t < APPROVE_AT){ requestAnimationFrame(tick); }
-      else { approveSequence(); }
-    }
-    requestAnimationFrame(tick);
-  })();
-
-  // Optional skip: tap to approve immediately (kept smooth)
-  document.addEventListener('pointerdown', function once(){
-    approveSequence();
-    document.removeEventListener('pointerdown', once);
-  }, { once:true });
-
-  // Failsafe
-  setTimeout(function(){
-    if (!document.body.classList.contains('page-on')) approveSequence();
-  }, 6000);
-})();
-</script>
-</body>
-</html>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 2 2H5a2 2 0 0 1-2-2V7Z" stroke="#9ecaff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#9ecaff" stroke-width="1.5"/></svg>
+            <a href="mailto:info@f1cash.net">info@
