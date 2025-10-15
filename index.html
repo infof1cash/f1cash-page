@@ -17,6 +17,10 @@
   --line:#18233a; --ink:#e6ecff; --muted:#95a7cf;
   --accent:#11b1ff; --accent2:#6ee7ff; --glow:rgba(17,177,255,.28);
   --success:#24ff90;
+
+  /* live-tuned by JS during loading */
+  --logo-bright: 0;   /* 0..1 */
+  --logo-glow:   0;   /* 0..1 */
 }
 
 /* ---------- RESET / QUALITY ---------- */
@@ -53,16 +57,37 @@ body{
 /* ---------- PAGE FRAME ---------- */
 .page{min-height:100svh; display:flex; flex-direction:column; opacity:0; visibility:hidden; transition:opacity .4s ease}
 .page-on .page{opacity:1; visibility:visible}
-.wrap{max-width:1080px; width:100%; margin:0 auto; padding:18px 18px; flex:1}
 
-/* Footer pinned to bottom */
-footer{
-  margin-top:auto;
-  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;
-  padding:16px 18px; background:rgba(3,6,12,.38); backdrop-filter:saturate(120%) blur(2px); color:var(--muted); font-size:14px;
-  border-top:1px solid rgba(150,190,255,.10);
+/* stretch desktop to use space */
+.wrap{max-width:1240px; width:100%; margin:0 auto; padding:22px 24px; flex:1}
+@media (min-width:1400px){
+  .wrap{max-width:1320px}
+  h2{font-size:52px}
 }
-footer a:any-link{color:#a8dfff; text-decoration:none}
+
+/* Footer — futuristic glass rail */
+footer{
+  margin-top:auto; position:relative; overflow:hidden;
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;
+  padding:18px 24px; color:var(--muted); font-size:14px;
+  background:linear-gradient(180deg, rgba(6,10,20,.55), rgba(6,10,20,.35));
+  backdrop-filter:saturate(130%) blur(6px);
+  border-top:1px solid rgba(150,190,255,.12);
+}
+footer::before{
+  /* animated energy line */
+  content:""; position:absolute; left:-30%; right:-30%; top:0; height:2px;
+  background:linear-gradient(90deg, transparent, rgba(17,177,255,.7), transparent);
+  animation:footerSweep 6s linear infinite;
+  opacity:.7;
+}
+@keyframes footerSweep{to{transform:translateX(30%)}}
+footer .chip{
+  display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:12px;
+  background:linear-gradient(180deg, rgba(14,24,42,.35), rgba(10,16,28,.22));
+  border:1px solid rgba(120,170,240,.16);
+}
+footer a:any-link{color:#cfe6ff; text-decoration:none}
 footer a:hover{text-decoration:underline}
 
 /* ---------- SPLASH ---------- */
@@ -74,29 +99,28 @@ footer a:hover{text-decoration:underline}
 .splash.is-fading{opacity:0}
 .splash.is-hidden{opacity:0; visibility:hidden}
 
+/* perfectly blended splash — no rectangular artifacts */
 .splash__stage{position:relative; display:grid; place-items:center; gap:16px}
-.logo-stack{position:relative; display:grid; place-items:center}
-
-/* Rounded tile that blends in with backdrop */
-.splash__tile{
-  position:absolute; width:min(62vw,520px); aspect-ratio:1.4/1; border-radius:28px;
+.splash-vignette{
+  position:absolute; width:min(80vw,780px); aspect-ratio:1/1; border-radius:50%;
   background:
-    radial-gradient(140% 120% at 18% 20%, rgba(8,180,255,.18), transparent 60%),
-    linear-gradient(180deg, rgba(10,16,28,.65), rgba(6,10,20,.45));
-  border:1px solid rgba(120,170,240,.12);
-  filter:blur(.2px) saturate(1.02);
-  box-shadow:inset 0 0 1px rgba(255,255,255,.06), 0 40px 70px rgba(0,0,0,.45);
+    radial-gradient(closest-side, rgba(8,150,220,.20), rgba(8,150,220,0) 70%),
+    radial-gradient(closest-side, rgba(10,20,40,.35), rgba(10,20,40,0) 70%);
+  filter:blur(16px); opacity:.85; z-index:-1;
 }
-@media (max-width:900px){ .splash__tile{ width:min(82vw,440px) } }
 
-/* Bigger logo on desktop; calm pulse */
+/* Calm pulse + progress-driven neon */
 .splash__logo{
-  position:relative;
-  width:min(42vw, 280px); height:auto; border-radius:22px;
-  mix-blend-mode:screen; opacity:.98;
+  width:min(44vw, 300px); height:auto; border-radius:22px;
   animation:softPulse 3.2s ease-in-out infinite;
-  filter:contrast(1.08) saturate(1.06) drop-shadow(0 10px 24px rgba(0,0,0,.45));
+  filter:
+    brightness(calc(0.72 + 0.58*var(--logo-bright)))
+    contrast(calc(1 + .18*var(--logo-bright)))
+    saturate(calc(1 + .18*var(--logo-bright)))
+    drop-shadow(0 10px 22px rgba(0,0,0,.45));
+  mix-blend-mode:screen; opacity:.98;
 }
+@media (max-width:900px){ .splash__logo{ width:196px } }
 @keyframes softPulse{
   0%   { transform:translateY(0) scale(1) }
   18%  { transform:translateY(-0.5px) scale(1.015) }
@@ -104,34 +128,19 @@ footer a:hover{text-decoration:underline}
   54%  { transform:translateY(-0.5px) scale(1.012) }
   100% { transform:translateY(0) scale(1) }
 }
-@media (max-width:900px){ .splash__logo{ width:196px } }
 
-/* Aura + rounded-tile orbit (thin, subtle) */
-.tile-orbit{
-  position:absolute; width:clamp(220px,42vw,320px); aspect-ratio:1/1; border-radius:22px;
-  -webkit-mask: radial-gradient(closest-side, transparent 78%, #000 80% 100%);
-          mask: radial-gradient(closest-side, transparent 78%, #000 80% 100%);
-  background:conic-gradient(from 0deg, rgba(17,177,255,0), rgba(17,177,255,.55) 20%, rgba(17,177,255,0) 25%, rgba(110,231,255,0) 60%, rgba(17,177,255,0));
-  animation:orbit 9.5s linear infinite;
-  filter:drop-shadow(0 0 6px rgba(17,177,255,.28));
+/* Neon glow tied to progress */
+.logo-neon{
+  position:absolute; width:min(50vw,360px); aspect-ratio:1/1; pointer-events:none; z-index:-1;
+  background:
+    radial-gradient(closest-side, rgba(17,177,255,.45), rgba(17,177,255,0) 72%);
+  filter:blur(18px);
+  opacity:calc(.08 + .92*var(--logo-glow));   /* grows with progress */
 }
-@keyframes orbit{to{transform:rotate(360deg)}}
-
-/* NEW: sweep that follows the actual logo shape (masked by the logo image) */
-.logo-sweep{
-  position:absolute; inset:0; pointer-events:none; opacity:.70; mix-blend-mode:screen;
-  background:conic-gradient(from 0deg, rgba(17,177,255,0), rgba(110,231,255,.85), rgba(17,177,255,0) 25%, rgba(17,177,255,0));
-  animation:spinSweep 7.5s linear infinite;
-  -webkit-mask: url("assets/logo.png") center/contain no-repeat;
-          mask: url("assets/logo.png") center/contain no-repeat;
-  mask-mode: luminance;
-  filter:blur(.6px);
-}
-@keyframes spinSweep{to{transform:rotate(360deg)}}
 
 /* Loading bar + Approved text */
 .progress{
-  width:min(70vw,420px); height:10px; border-radius:999px; overflow:hidden;
+  width:min(70vw,520px); height:10px; border-radius:999px; overflow:hidden;
   background:linear-gradient(180deg, rgba(12,18,30,.6), rgba(10,16,26,.4));
   border:1px solid rgba(120,170,240,.18);
   box-shadow:inset 0 0 1px rgba(255,255,255,.05), 0 6px 18px rgba(0,0,0,.25);
@@ -143,9 +152,8 @@ footer a:hover{text-decoration:underline}
   transition:width .25s ease;
 }
 .progress__label{
-  font-family:'Orbitron',sans-serif; letter-spacing:1.6px; text-transform:uppercase;
-  font-size:.85rem; color:#a9cfff; text-align:center; margin-top:8px;
-  opacity:.85;
+  font-family:'Orbitron',sans-serif; letter-spacing:1.8px; text-transform:uppercase;
+  font-size:clamp(.82rem,.9rem,.95rem); color:#a9cfff; text-align:center; margin-top:10px; opacity:.9;
 }
 .approved{
   display:none; margin-top:8px;
@@ -158,22 +166,15 @@ footer a:hover{text-decoration:underline}
 }
 
 /* ---------- CONTENT ---------- */
-header{display:flex;align-items:center;gap:16px;padding:18px 0 22px;border-bottom:1px solid var(--line)}
+header{display:flex;align-items:center;gap:18px;padding:20px 0 22px;border-bottom:1px solid var(--line)}
 .logo{
-  position:relative; width:86px; height:86px; border-radius:18px; overflow:hidden; isolate:isolate;
+  position:relative; width:92px; height:92px; border-radius:18px; overflow:hidden; isolate:isolate;
   background:radial-gradient(120% 120% at 30% 30%, rgba(8,180,255,.22), transparent 60%), #081018;
   box-shadow:0 10px 24px rgba(17,177,255,.22);
 }
 .logo img{ width:100%; height:100%; object-fit:cover; mix-blend-mode:screen; opacity:.98; filter:contrast(1.08) saturate(1.05) }
-.logo::before{
-  content:""; position:absolute; inset:-8px; border-radius:24px;
-  background:conic-gradient(from 0deg, rgba(17,177,255,0), rgba(17,177,255,.55), rgba(110,231,255,0) 60%, rgba(17,177,255,0));
-  -webkit-mask: radial-gradient(closest-side, transparent 78%, #000 79% 100%);
-          mask: radial-gradient(closest-side, transparent 78%, #000 79% 100%);
-  animation:orbit 7.6s linear infinite; filter:blur(1px);
-}
 .logo-text h1{
-  font-family:'Orbitron',sans-serif;font-weight:700;font-size:22px;letter-spacing:.9px;
+  font-family:'Orbitron',sans-serif;font-weight:700;font-size:24px;letter-spacing:.9px;
   background:linear-gradient(90deg,var(--accent),var(--accent2));
   -webkit-background-clip:text;background-clip:text;color:transparent;
   background-size:220% 100%; animation:shine 4.2s ease-in-out infinite;
@@ -182,10 +183,10 @@ header{display:flex;align-items:center;gap:16px;padding:18px 0 22px;border-botto
 @keyframes shine{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 .logo-text p{color:var(--muted);font-size:13px}
 
-main{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:32px;padding:24px 0}
-.content{flex:1 1 460px}
+main{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:36px;padding:26px 0}
+.content{flex:1 1 520px}
 h2{
-  font-family:'Orbitron',sans-serif; font-weight:800; font-size:44px; line-height:1.12;
+  font-family:'Orbitron',sans-serif; font-weight:800; font-size:46px; line-height:1.12;
   margin:0 0 12px; letter-spacing:.3px; background:linear-gradient(90deg,var(--accent),#7dd3fc);
   -webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 6px 18px rgba(17,177,255,.12));
@@ -200,11 +201,10 @@ li{margin-bottom:8px}
 }
 .note{font-size:12.5px;color:var(--muted);margin-top:8px}
 
-/* ---------- FUTURISTIC TERMS CARD (fixed content + small icons) ---------- */
+/* ---------- FUTURISTIC TERMS CARD (compact, all content visible) ---------- */
 .card{
   --gd:rgba(20,30,55,.86);
-  position:relative;
-  flex:1 1 330px;
+  position:relative; flex:1 1 380px;
   background:
     radial-gradient(180% 140% at 0% 0%, rgba(17,177,255,.08), transparent 60%),
     linear-gradient(180deg, var(--gd), rgba(13,18,32,.82));
@@ -230,7 +230,7 @@ li{margin-bottom:8px}
   color:#c9e7ff; font-size:1.15rem; margin:2px 0 12px;
   border-bottom:1px solid rgba(120,170,240,.18); padding-bottom:10px;
 }
-.row{display:grid;grid-template-columns:160px 1fr;gap:12px 14px;align-items:center;margin:12px 0}
+.row{display:grid;grid-template-columns:160px 1fr;gap:10px 14px;align-items:center;margin:10px 0}
 .label{color:var(--muted);font-size:14px;display:flex;align-items:center;gap:8px}
 .value{font-weight:800;color:#e8f2ff}
 
@@ -238,7 +238,7 @@ li{margin-bottom:8px}
 .icon{width:18px;height:18px;display:inline-grid;place-items:center;flex:0 0 18px}
 .icon svg{width:16px;height:16px;display:block}
 
-/* Neon corner nodes + scan line */
+/* Neon nodes + scan line */
 .card .node{position:absolute;width:8px;height:8px;border-radius:50%;background:rgba(17,177,255,.9);animation:nodePulse 2.6s ease-in-out infinite}
 .card .node.tl{top:10px;left:10px} .card .node.tr{top:10px;right:10px}
 .card .node.bl{bottom:10px;left:10px} .card .node.br{bottom:10px;right:10px}
@@ -258,7 +258,7 @@ a:any-link{color:#a8dfff} a:visited{color:#a8dfff}
 /* ---------- PIXEL OVERLAYS ---------- */
 .pixel-overlay{
   position:fixed; inset:0; z-index:30; pointer-events:none; display:grid;
-  grid-template-columns:repeat(var(--px-cols,20),1fr);
+  grid-template-columns:repeat(var(--px-cols,22),1fr);
   grid-template-rows:repeat(var(--px-rows,12),1fr);
   background:transparent;
 }
@@ -273,11 +273,12 @@ a:any-link{color:#a8dfff} a:visited{color:#a8dfff}
 .pixel-overlay.assemble .px{ opacity:1 }  /* particles fly in */
 .pixel-overlay.out .px{ opacity:0 }       /* dissolve out */
 
+/* Responsive */
 @media (max-width:960px){
-  .wrap{padding:12px 14px}
+  .wrap{padding:14px 16px}
   main{flex-direction:column}
   h2{font-size:36px}
-  .logo{width:78px;height:78px}
+  .logo{width:80px;height:80px}
 }
 @media (max-width:520px){
   h2{font-size:30px}
@@ -292,15 +293,12 @@ a:any-link{color:#a8dfff} a:visited{color:#a8dfff}
   <div class="bg-cosmos"></div>
   <div class="bg-grain"></div>
 
-  <!-- Splash: blended tile + logo shape-following sweep + progress gate -->
+  <!-- Splash: perfectly blended, no rectangles; neon tied to progress -->
   <div class="splash" id="splash" aria-hidden="true">
     <div class="splash__stage">
-      <div class="splash__tile" aria-hidden="true"></div>
-      <div class="logo-stack">
-        <img class="splash__logo" src="assets/logo.png" alt="F1 Cash logo">
-        <div class="tile-orbit" aria-hidden="true"></div>
-        <div class="logo-sweep" aria-hidden="true"></div>
-      </div>
+      <div class="splash-vignette" aria-hidden="true"></div>
+      <div class="logo-neon" aria-hidden="true"></div>
+      <img class="splash__logo" src="assets/logo.png" alt="F1 Cash logo">
       <div class="progress" aria-label="Loading"><div class="progress__bar" id="bar"></div></div>
       <div class="progress__label" id="label">AUTHORIZING…</div>
       <div class="approved" id="approved">ACCESS APPROVED</div>
@@ -362,18 +360,15 @@ a:any-link{color:#a8dfff} a:visited{color:#a8dfff}
     </div>
 
     <footer>
-      <div>
-        <span class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="#9ecaff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#9ecaff" stroke-width="1.5"/></svg>
-        </span>
-        &nbsp;<a href="mailto:info@f1cash.net">info@f1cash.net</a>
-        &nbsp;&nbsp;·&nbsp;&nbsp;
-        <span class="icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
-        </span>
-        &nbsp;<a href="tel:+12294484389">+1 229-448-4389</a>
+      <div class="chip">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="#9ecaff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#9ecaff" stroke-width="1.5"/></svg>
+        <a href="mailto:info@f1cash.net">info@f1cash.net</a>
       </div>
-      <div>© 2025 F1 Cash · All rights reserved.</div>
+      <div class="chip">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
+        <a href="tel:+12294484389">+1 229-448-4389</a>
+      </div>
+      <div class="chip">© 2025 F1 Cash</div>
     </footer>
   </div>
 
@@ -385,6 +380,7 @@ a:any-link{color:#a8dfff} a:visited{color:#a8dfff}
   var bar = document.getElementById('bar');
   var label = document.getElementById('label');
   var pxLayer = document.getElementById('pixelOverlay');
+  var root = document.documentElement;
 
   // Build pixel grid with edge-spawn vectors
   (function buildPixels(){
@@ -440,13 +436,21 @@ a:any-link{color:#a8dfff} a:visited{color:#a8dfff}
 
   function runSequence(){
     if (reduce){
+      root.style.setProperty('--logo-bright','1');
+      root.style.setProperty('--logo-glow','1');
       assemblePixels(); label.style.display='none'; approved.style.display='block';
       return setTimeout(revealPage, 400);
     }
     var start = performance.now(), DURATION = 1900;
     function tick(now){
       var t = Math.min(1, (now - start) / DURATION);
+      // progress bar
       bar.style.width = (t*100).toFixed(1) + '%';
+      // neon intensity follows progress (easing for nicer ramp)
+      var glow = Math.pow(t, 1.15);
+      root.style.setProperty('--logo-bright', glow.toFixed(3));
+      root.style.setProperty('--logo-glow',   glow.toFixed(3));
+
       if (t < 1){ requestAnimationFrame(tick); }
       else {
         label.textContent = 'Verifying…';
@@ -463,6 +467,8 @@ a:any-link{color:#a8dfff} a:visited{color:#a8dfff}
 
   // Tap/click to skip to approval quickly
   document.addEventListener('pointerdown', function skipOnce(){
+    root.style.setProperty('--logo-bright','1');
+    root.style.setProperty('--logo-glow','1');
     bar.style.width='100%';
     label.style.display='none'; approved.style.display='block';
     assemblePixels(); setTimeout(revealPage, 350);
@@ -474,6 +480,8 @@ a:any-link{color:#a8dfff} a:visited{color:#a8dfff}
   // Safety
   setTimeout(function(){
     if (!document.body.classList.contains('page-on')){
+      root.style.setProperty('--logo-bright','1');
+      root.style.setProperty('--logo-glow','1');
       label.style.display='none'; approved.style.display='block';
       assemblePixels(); revealPage();
     }
