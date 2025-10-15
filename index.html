@@ -6,7 +6,6 @@
 <title>F1 Cash — Simple Business Funding</title>
 <meta name="description" content="F1 Cash provides simple, fast working capital for small businesses." />
 
-<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -24,16 +23,15 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
-  color:var(--ink);
-  background-color:var(--bg-0);
+  color:var(--ink); background-color:var(--bg-0);
   font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility;
   overflow-x:hidden;
 }
 
-/* Smooth cosmic backdrop + film grain (kills banding) */
-body::before{
-  content:""; position:fixed; inset:-15% -15% -15% -15%; z-index:-2; pointer-events:none;
+/* Shared cosmic backdrop (splash + page) */
+.bg-cosmos{
+  position:fixed; inset:-15% -15% -15% -15%; z-index:-3; pointer-events:none;
   background:
     radial-gradient(1400px 900px at 12% -8%, rgba(16,30,60,.72) 0%, rgba(9,14,26,.55) 45%, rgba(7,10,18,.0) 80%),
     radial-gradient(1100px 800px at 80% 10%, rgba(20,55,90,.55) 0%, rgba(10,18,36,.35) 50%, rgba(7,10,18,.0) 85%),
@@ -41,8 +39,8 @@ body::before{
     linear-gradient(120deg, var(--bg-1), var(--bg-2));
   filter:saturate(1.05);
 }
-body::after{
-  content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+.bg-grain{
+  content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
   background-image:
     radial-gradient(1px 1px at 15% 12%, rgba(255,255,255,.035) 0, transparent 55%),
     radial-gradient(1px 1px at 35% 78%, rgba(255,255,255,.03) 0, transparent 55%),
@@ -52,79 +50,67 @@ body::after{
   opacity:.28; mix-blend-mode:overlay;
 }
 
-/* ---------- STICKY HEADER (optional, minimal) ---------- */
-.topbar{
-  position:sticky; top:0; z-index:50;
-  display:flex; align-items:center; gap:14px;
-  padding:10px 18px;
-  background:linear-gradient(180deg, rgba(6,10,20,.72), rgba(6,10,20,.35));
-  backdrop-filter:saturate(120%) blur(6px);
-  border-bottom:1px solid rgba(150,190,255,.10);
+/* ---------- PAGE FRAME (footer pinned to bottom) ---------- */
+.page{min-height:100svh; display:flex; flex-direction:column}
+.wrap{max-width:1080px; width:100%; margin:0 auto; padding:18px 18px; flex:1}
+footer{
+  margin-top:auto;
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;
+  padding:16px 18px; background:rgba(3,6,12,.38); backdrop-filter:saturate(120%) blur(2px); color:var(--muted); font-size:14px;
+  border-top:1px solid rgba(150,190,255,.10);
 }
-.topbar .brand{
-  display:flex; align-items:center; gap:12px;
-  padding:6px 10px; border-radius:14px;
-  position:relative; background:linear-gradient(180deg, rgba(14,24,42,.45), rgba(10,16,28,.25));
-  border:1px solid rgba(120,170,240,.16);
-  box-shadow:inset 0 0 1px rgba(255,255,255,.05), 0 8px 22px rgba(0,0,0,.35);
+footer a{color:var(--ink); position:relative; text-decoration:none}
+footer a::after{
+  content:""; position:absolute; left:0; right:0; bottom:-2px; height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  transform:scaleX(0); transform-origin:center; transition:transform .3s ease;
 }
-.brand .logo-tile{
-  position:relative; width:44px; height:44px; border-radius:12px; overflow:hidden;
-  box-shadow:0 10px 24px rgba(17,177,255,.22);
-  background:radial-gradient(120% 120% at 30% 30%, rgba(8,180,255,.3), rgba(6,12,22,.0) 60%), #081018;
-}
-/* place the actual image centered; blends with tile */
-.brand .logo-tile img{
-  width:100%; height:100%; object-fit:cover; mix-blend-mode:screen; opacity:.95; filter:contrast(1.05) saturate(1.05);
-}
-/* orbiting light around tile */
-.brand .logo-tile::before{
-  content:""; position:absolute; inset:-6px; border-radius:16px;
-  background:conic-gradient(from 0deg, rgba(17,177,255,.0), rgba(17,177,255,.75), rgba(110,231,255,.0) 60%, rgba(17,177,255,.0));
-  -webkit-mask: radial-gradient(closest-side, transparent 78%, #000 79% 100%);
-          mask: radial-gradient(closest-side, transparent 78%, #000 79% 100%);
-  animation:orbit 6.5s linear infinite;
-  filter:blur(1.2px) drop-shadow(0 0 6px rgba(17,177,255,.35));
-}
-@keyframes orbit{ to{ transform:rotate(360deg) } }
+footer a:hover::after{transform:scaleX(1)}
 
-.brand .title h1{
-  font-family:'Orbitron',sans-serif; font-size:16px; font-weight:700;
-  letter-spacing:.6px; margin:0;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-}
-.brand .title p{margin:0; font-size:12px; color:var(--muted)}
-
-.topbar .nav{
-  margin-left:auto; display:flex; align-items:center; gap:12px;
-}
-.topbar .nav a{
-  color:#cfe6ff; text-decoration:none; font-weight:600; font-size:13px;
-  padding:8px 12px; border-radius:10px; border:1px solid rgba(120,170,240,.12);
-  background:linear-gradient(180deg, rgba(12,20,36,.35), rgba(8,14,26,.22));
-}
-.topbar .nav a:hover{border-color:rgba(120,170,240,.28)}
-
-/* ---------- SPLASH ---------- */
+/* ---------- SPLASH (no header) ---------- */
 .splash{
   position:fixed; inset:0; z-index:9999; display:grid; place-items:center;
-  background:
-    radial-gradient(1150px 820px at 50% -20%, rgba(12,19,37,.98) 0%, rgba(7,10,18,.96) 70%, rgba(5,7,13,.96) 100%),
-    linear-gradient(120deg, var(--bg-1), var(--bg-2));
   opacity:1; visibility:visible;
   transition:opacity .7s ease, visibility .7s ease;
 }
 .splash.is-fading{opacity:0}
 .splash.is-hidden{opacity:0; visibility:hidden}
 
-.splash__stack{display:flex;flex-direction:column;align-items:center;gap:18px}
+.splash__stage{position:relative; display:grid; place-items:center}
+.logo-stack{position:relative; display:grid; place-items:center}
+
+/* Bigger logo on desktop */
 .splash__logo{
-  width:184px; border-radius:26px;
+  width:min(48vw, 260px); height:auto; border-radius:28px;
   box-shadow:0 16px 40px var(--glow), 0 0 0 1px rgba(255,255,255,.06) inset;
   animation:softPulse 3.2s ease-in-out infinite;
-  filter:drop-shadow(0 8px 18px rgba(0,0,0,.45));
+  filter:drop-shadow(0 10px 24px rgba(0,0,0,.45));
 }
+/* mobile size */
+@media (max-width:900px){ .splash__logo{ width:184px } }
+
+/* Aura & orbit, blended with backdrop */
+.logo-aura{
+  position:absolute; inset:-18%; border-radius:32px; pointer-events:none; z-index:-1;
+  background:
+    radial-gradient(closest-side, rgba(17,177,255,.35), rgba(17,177,255,0) 70%),
+    radial-gradient(120% 80% at 30% 20%, rgba(110,231,255,.25), rgba(17,177,255,0) 70%);
+  filter:blur(2px) saturate(1.05);
+  mix-blend-mode:screen;
+}
+.logo-orbit{
+  position:absolute; inset:-10%; border-radius:32px; pointer-events:none;
+  -webkit-mask: radial-gradient(closest-side, transparent 78%, #000 80% 100%);
+          mask: radial-gradient(closest-side, transparent 78%, #000 80% 100%);
+}
+.logo-orbit::before{
+  content:""; position:absolute; inset:-6px; border-radius:inherit;
+  background:conic-gradient(from 0deg, rgba(17,177,255,0), rgba(17,177,255,.9), rgba(110,231,255,0) 60%, rgba(17,177,255,0));
+  animation:orbit 7s linear infinite;
+  filter:drop-shadow(0 0 10px rgba(17,177,255,.45));
+}
+
+@keyframes orbit{to{transform:rotate(360deg)}}
 @keyframes softPulse{
   0%   { transform:translateY(0) scale(1) }
   18%  { transform:translateY(-0.5px) scale(1.015) }
@@ -133,14 +119,14 @@ body::after{
   100% { transform:translateY(0) scale(1) }
 }
 
-/* ACCESS APPROVED (kept but subtle) */
+/* ACCESS APPROVED (subtle) */
 .approved{
   font-family:'Orbitron',sans-serif; letter-spacing:2px; text-transform:uppercase;
-  color:var(--success); font-size:.9rem;
+  color:var(--success); font-size:.95rem; margin-top:14px;
   opacity:0; transform:translateY(6px) scale(.98);
   transition:opacity .35s ease, transform .35s ease;
   text-shadow:0 0 10px var(--success), 0 0 20px var(--success);
-  padding:.5rem .9rem; border-radius:10px;
+  padding:.55rem .9rem; border-radius:10px;
   background:linear-gradient(180deg, rgba(10,20,30,.35), rgba(8,14,24,.2));
   border:1px solid rgba(120,220,170,.22);
 }
@@ -149,21 +135,21 @@ body::after{
   .splash{transition:none} .splash__logo{animation:none}
 }
 
-/* ---------- PAGE LAYOUT ---------- */
-.wrap{max-width:1080px;margin:0 auto;padding:18px 18px; width:100%;}
-/* no flex filler -> footer sits just after content */
+/* ---------- CONTENT (same layout) ---------- */
 header{display:flex;align-items:center;gap:16px;padding:18px 0 22px;border-bottom:1px solid var(--line)}
-.logo{position:relative; width:86px; height:86px; border-radius:18px; overflow:hidden;}
-.logo img{ width:100%; height:100%; object-fit:cover; mix-blend-mode:screen; opacity:.95; filter:contrast(1.05) saturate(1.05); }
-/* same orbit on header logo for consistency */
+.logo{
+  position:relative; width:86px; height:86px; border-radius:18px; overflow:hidden;
+  box-shadow:0 10px 24px rgba(17,177,255,.22);
+  background:radial-gradient(120% 120% at 30% 30%, rgba(8,180,255,.26), rgba(6,12,22,.0) 60%), #081018;
+}
+.logo img{ width:100%; height:100%; object-fit:cover; mix-blend-mode:screen; opacity:.95; filter:contrast(1.05) saturate(1.05) }
 .logo::before{
   content:""; position:absolute; inset:-8px; border-radius:24px;
   background:conic-gradient(from 0deg, rgba(17,177,255,0), rgba(17,177,255,.7), rgba(110,231,255,0) 60%, rgba(17,177,255,0));
   -webkit-mask: radial-gradient(closest-side, transparent 78%, #000 79% 100%);
           mask: radial-gradient(closest-side, transparent 78%, #000 79% 100%);
-  animation:orbit 7.2s linear infinite; filter:blur(1.2px);
+  animation:orbit 7.6s linear infinite; filter:blur(1.2px);
 }
-
 .logo-text h1{
   font-family:'Orbitron',sans-serif;font-weight:700;font-size:22px;letter-spacing:.9px;
   background:linear-gradient(90deg,var(--accent),var(--accent2));
@@ -205,33 +191,23 @@ li{margin-bottom:8px}
 .icon{width:16px;height:16px;display:inline-block;vertical-align:-2px}
 .icon svg{width:16px;height:16px;display:block}
 
-/* Footer (closer to content) */
-footer{
-  margin-top:18px;
-  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;
-  padding:16px 18px; background:rgba(3,6,12,.38); backdrop-filter:saturate(120%) blur(2px); color:var(--muted); font-size:14px;
-  border-top:1px solid rgba(150,190,255,.10);
-}
-footer a{color:var(--ink); position:relative; text-decoration:none}
-footer a::after{
-  content:""; position:absolute; left:0; right:0; bottom:-2px; height:1px;
-  background:linear-gradient(90deg,transparent,var(--accent),transparent);
-  transform:scaleX(0); transform-origin:center; transition:transform .3s ease;
-}
-footer a:hover::after{transform:scaleX(1)}
-
-/* ---------- PIXEL REVEAL OVERLAY ---------- */
+/* ---------- PIXEL MATERIALIZE (assembling) ---------- */
 .pixel-overlay{
   position:fixed; inset:0; z-index:30; pointer-events:none; display:grid;
-  grid-template-columns:repeat(var(--px-cols,16),1fr);
-  grid-template-rows:repeat(var(--px-rows,10),1fr);
+  grid-template-columns:repeat(var(--px-cols,18),1fr);
+  grid-template-rows:repeat(var(--px-rows,11),1fr);
+  background:transparent;
 }
-.pixel-overlay .px{
-  background:linear-gradient(180deg, rgba(18,26,44,.92), rgba(12,18,34,.9));
+.px{
+  --tx:0px; --ty:0px; --rot:0deg;
+  background:linear-gradient(180deg, rgba(18,26,44,.94), rgba(12,18,34,.9));
   border:1px solid rgba(120,170,240,.06);
-  opacity:1; transition:opacity .38s ease, transform .38s ease; will-change:opacity,transform;
+  transform:translate(var(--tx),var(--ty)) rotate(var(--rot));
+  opacity:0; transition:transform .6s cubic-bezier(.2,.8,.2,1), opacity .6s ease;
+  will-change:transform,opacity;
 }
-.pixel-overlay.out .px{ opacity:0; transform:scale(1.04); }
+.pixel-overlay.assemble .px{ opacity:1 }          /* particles flying in */
+.pixel-overlay.out .px{ opacity:0 }               /* dissolve out */
 
 /* Responsive bits */
 @media (max-width:960px){
@@ -249,128 +225,151 @@ footer a:hover::after{transform:scaleX(1)}
 </head>
 
 <body>
-  <!-- Sticky header -->
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo-tile"><img src="assets/logo.png" alt=""></div>
-      <div class="title">
-        <h1>F1 CASH</h1>
-        <p>Simple Business Funding</p>
-      </div>
-    </div>
-    <nav class="nav">
-      <a href="#terms">Terms</a>
-      <a href="mailto:info@f1cash.net">Contact</a>
-      <a href="#" aria-disabled="true" title="Coming soon">Apply</a>
-    </nav>
-  </div>
+  <!-- Unified background layers -->
+  <div class="bg-cosmos"></div>
+  <div class="bg-grain"></div>
 
-  <!-- Splash -->
+  <!-- Splash (better blend + bigger logo on desktop) -->
   <div class="splash" id="splash" aria-hidden="true">
-    <div class="splash__stack">
-      <img class="splash__logo" src="assets/logo.png" alt="F1 Cash logo">
+    <div class="splash__stage">
+      <div class="logo-stack">
+        <img class="splash__logo" src="assets/logo.png" alt="F1 Cash logo">
+        <div class="logo-aura" aria-hidden="true"></div>
+        <div class="logo-orbit" aria-hidden="true"></div>
+      </div>
       <div class="approved" id="approved">ACCESS APPROVED</div>
     </div>
   </div>
 
-  <!-- Pixel overlay (for content reveal) -->
-  <div class="pixel-overlay" id="pixelOverlay" style="--px-cols:16;--px-rows:10" aria-hidden="true"></div>
+  <!-- Pixel overlay for assemble + dissolve -->
+  <div class="pixel-overlay" id="pixelOverlay" style="--px-cols:18;--px-rows:11" aria-hidden="true"></div>
 
-  <!-- Main content -->
-  <div class="wrap" id="app">
-    <header>
-      <div class="logo"><img src="assets/logo.png" alt="F1 Cash Logo"></div>
-      <div class="logo-text">
-        <h1>F1 CASH</h1>
-        <p>Simple Business Funding</p>
-      </div>
-    </header>
-
-    <main>
-      <div class="content">
-        <h2>Fast working capital for small businesses</h2>
-        <p>Funding up to $1,000 with clear monthly payments and no collateral or hard credit pulls.</p>
-        <ul>
-          <li>Business owners with 12+ months in operation</li>
-          <li>Simple promissory note after verification</li>
-          <li>6 equal monthly installments</li>
-        </ul>
-        <a class="apply-btn" aria-disabled="true" title="Coming soon">APPLY NOW</a>
-        <p class="note">Button disabled for now — application link coming soon.</p>
-      </div>
-
-      <aside class="card" id="terms" aria-label="At-a-glance terms">
-        <h3>At-a-glance terms</h3>
-        <div class="row"><span class="label">Typical advance</span><span class="value">$300 – $1,000</span></div>
-        <div class="row"><span class="label">Schedule</span><span class="value">6 monthly payments</span></div>
-        <div class="row">
-          <span class="label">
-            <span class="icon" aria-hidden="true">
-              <!-- Mail icon -->
-              <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="#9ecaff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#9ecaff" stroke-width="1.5"/></svg>
-            </span> Support
-          </span>
-          <span class="value"><a href="mailto:info@f1cash.net">info@f1cash.net</a></span>
+  <!-- Page -->
+  <div class="page">
+    <div class="wrap">
+      <header>
+        <div class="logo"><img src="assets/logo.png" alt="F1 Cash Logo"></div>
+        <div class="logo-text">
+          <h1>F1 CASH</h1>
+          <p>Simple Business Funding</p>
         </div>
-        <div class="row">
-          <span class="label">
-            <span class="icon" aria-hidden="true">
-              <!-- Phone icon -->
-              <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
-            </span> Phone
-          </span>
-          <span class="value"><a href="tel:+12294484389">+1 229-448-4389</a></span>
+      </header>
+
+      <main>
+        <div class="content">
+          <h2>Fast working capital for small businesses</h2>
+          <p>Funding up to $1,000 with clear monthly payments and no collateral or hard credit pulls.</p>
+          <ul>
+            <li>Business owners with 12+ months in operation</li>
+            <li>Simple promissory note after verification</li>
+            <li>6 equal monthly installments</li>
+          </ul>
+          <a class="apply-btn" aria-disabled="true" title="Coming soon">APPLY NOW</a>
+          <p class="note">Button disabled for now — application link coming soon.</p>
         </div>
-      </aside>
-    </main>
+
+        <aside class="card" aria-label="At-a-glance terms">
+          <h3>At-a-glance terms</h3>
+          <div class="row"><span class="label">Typical advance</span><span class="value">$300 – $1,000</span></div>
+          <div class="row"><span class="label">Schedule</span><span class="value">6 monthly payments</span></div>
+          <div class="row">
+            <span class="label">
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="#9ecaff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#9ecaff" stroke-width="1.5"/></svg>
+              </span> Support
+            </span>
+            <span class="value"><a href="mailto:info@f1cash.net">info@f1cash.net</a></span>
+          </div>
+          <div class="row">
+            <span class="label">
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
+              </span> Phone
+            </span>
+            <span class="value"><a href="tel:+12294484389">+1 229-448-4389</a></span>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <footer>
+      <div>
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="#9ecaff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#9ecaff" stroke-width="1.5"/></svg>
+        </span>
+        &nbsp;<a href="mailto:info@f1cash.net">info@f1cash.net</a>
+        &nbsp;&nbsp;·&nbsp;&nbsp;
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
+        </span>
+        &nbsp;<a href="tel:+12294484389">+1 229-448-4389</a>
+      </div>
+      <div>© 2025 F1 Cash · All rights reserved.</div>
+    </footer>
   </div>
 
-  <!-- Footer (now close to content) -->
-  <footer>
-    <div>
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="#9ecaff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#9ecaff" stroke-width="1.5"/></svg>
-      </span>
-      &nbsp;<a href="mailto:info@f1cash.net">info@f1cash.net</a>
-      &nbsp;&nbsp;·&nbsp;&nbsp;
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
-      </span>
-      &nbsp;<a href="tel:+12294484389">+1 229-448-4389</a>
-    </div>
-    <div>© 2025 F1 Cash · All rights reserved.</div>
-  </footer>
-
-  <!-- Controllers: splash + pixel reveal -->
+  <!-- Controllers: splash + assemble/dissolve pixels -->
   <script>
   (function(){
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var splash = document.getElementById('splash');
     var approved = document.getElementById('approved');
-    var pixelOverlay = document.getElementById('pixelOverlay');
+    var pxLayer = document.getElementById('pixelOverlay');
 
-    // Build pixel grid once
+    // Build pixel grid + set random start vectors (assemble to center)
     (function buildPixels(){
-      var cols = parseInt(getComputedStyle(pixelOverlay).getPropertyValue('--px-cols')) || 16;
-      var rows = parseInt(getComputedStyle(pixelOverlay).getPropertyValue('--px-rows')) || 10;
+      var styles = getComputedStyle(pxLayer);
+      var cols = parseInt(styles.getPropertyValue('--px-cols')) || 18;
+      var rows = parseInt(styles.getPropertyValue('--px-rows')) || 11;
+      var w = window.innerWidth, h = window.innerHeight;
+      var cx = w/2, cy = h/2;
       var frag = document.createDocumentFragment();
+
       for (var r=0; r<rows; r++){
         for (var c=0; c<cols; c++){
-          var cell = document.createElement('div');
-          cell.className = 'px';
-          // randomized delay so it dissolves like pixels
-          var delay = (Math.random()*420 + (r*6 + c*4));
-          cell.style.transitionDelay = delay+'ms';
-          frag.appendChild(cell);
+          var el = document.createElement('div');
+          el.className = 'px';
+          // random start point around edges
+          var angle = Math.random()*Math.PI*2;
+          var radius = Math.max(w,h)*0.75*(.6 + Math.random()*0.6);
+          var sx = Math.cos(angle)*radius;
+          var sy = Math.sin(angle)*radius;
+          el.style.setProperty('--tx', sx+'px');
+          el.style.setProperty('--ty', sy+'px');
+          el.style.setProperty('--rot', (Math.random()*30-15)+'deg');
+          // stagger: closer tiles finish sooner for a natural assemble
+          var delay = 60 + Math.random()*240 + (Math.abs(sx)+Math.abs(sy))/20;
+          el.style.transitionDelay = delay+'ms';
+          frag.appendChild(el);
         }
       }
-      pixelOverlay.appendChild(frag);
+      pxLayer.appendChild(frag);
     })();
 
+    function assemblePixels(){
+      // fly in to center
+      requestAnimationFrame(function(){
+        pxLayer.classList.add('assemble');
+        // remove offsets
+        var tiles = pxLayer.children;
+        for (var i=0;i<tiles.length;i++){
+          tiles[i].style.setProperty('--tx', '0px');
+          tiles[i].style.setProperty('--ty', '0px');
+          tiles[i].style.setProperty('--rot', '0deg');
+        }
+      });
+    }
+    function dissolvePixels(){
+      // fade away to reveal the site
+      requestAnimationFrame(function(){
+        pxLayer.classList.add('out');
+        setTimeout(function(){ pxLayer.remove(); }, 1200);
+      });
+    }
     function hideSplash(){
       document.body.classList.add('app-ready');
       if (splash){ splash.classList.add('is-fading'); }
-      var done=false; function end(){ if(done) return; done=true; splash && splash.classList.add('is-hidden'); startPixelReveal(); }
+      var done=false; function end(){ if(done) return; done=true; splash && splash.classList.add('is-hidden'); dissolvePixels(); }
       if (splash){
         splash.addEventListener('transitionend', function onEnd(e){
           if (e.propertyName === 'opacity'){ splash.removeEventListener('transitionend', onEnd); end(); }
@@ -379,31 +378,25 @@ footer a:hover::after{transform:scaleX(1)}
       setTimeout(end, 900);
     }
 
-    function startPixelReveal(){
-      // trigger the "pixels fade out" overlay
-      requestAnimationFrame(function(){
-        pixelOverlay.classList.add('out');
-        // remove overlay after animations
-        setTimeout(function(){ pixelOverlay.parentNode && pixelOverlay.parentNode.removeChild(pixelOverlay); }, 1200);
-      });
-    }
-
-    // allow tap/click anywhere to skip straight to reveal
+    // Instant skip on tap/click
     document.addEventListener('pointerdown', function once(){ hideSplash(); document.removeEventListener('pointerdown', once); }, { once:true });
 
     if (reduce){
+      // No animation path
+      dissolvePixels();
       hideSplash();
       return;
     }
 
-    // Timed sequence for splash
-    setTimeout(function(){ approved && approved.classList.add('visible'); }, 700);
-    setTimeout(hideSplash, 2100);
+    // Timings
+    setTimeout(function(){ approved && approved.classList.add('visible'); }, 800);
+    setTimeout(assemblePixels, 300);     // start assembling early (under logo)
+    setTimeout(hideSplash, 2300);        // then dissolve + reveal
 
-    // Absolute safety: bail out no matter what
+    // Absolute fallback
     setTimeout(function(){
-      if (!document.body.classList.contains('app-ready')) hideSplash();
-    }, 4500);
+      if (!document.body.classList.contains('app-ready')){ assemblePixels(); hideSplash(); }
+    }, 5000);
   })();
   </script>
 </body>
