@@ -16,6 +16,7 @@
 :root{
   --bg-1:#05070d; --bg-2:#0b1220; --line:#1c2640; --ink:#e6ecff; --muted:#92a0c5;
   --accent:#11b1ff; --accent2:#6ee7ff; --glow:rgba(17,177,255,.28);
+  --success:#24ff90;
 }
 
 /* ---------- RESET / QUALITY ---------- */
@@ -29,6 +30,7 @@ body{
   font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility;
 }
+
 /* subtle animated ambience */
 body::before{
   content:""; position:fixed; inset:-20% -20% -20% -20%; pointer-events:none; z-index:-1;
@@ -44,16 +46,16 @@ body::before{
   100%{transform:translate3d(2%,-1%,0) scale(1.02)}
 }
 
-/* ---------- SPLASH (logo only) ---------- */
+/* ---------- SPLASH (logo + access text) ---------- */
 .splash{
-  position:fixed; inset:0; z-index:9999; display:grid; place-items:center;
+  position:fixed; inset:0; z-index:9999; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:26px;
   background: radial-gradient(1100px 800px at 50% -20%, #0c1325 0%, #06080f 65%, #05070d 100%),
               linear-gradient(120deg, var(--bg-1), var(--bg-2));
   opacity:1; visibility:visible;
   transition:opacity .7s ease, visibility .7s ease;
 }
 
-/* Bigger logo + polished pulse */
 .splash__logo{
   width:184px; height:auto; border-radius:26px;
   box-shadow:0 20px 48px var(--glow), 0 0 0 1px rgba(255,255,255,.06) inset;
@@ -62,7 +64,7 @@ body::before{
   filter:drop-shadow(0 8px 18px rgba(0,0,0,.45));
 }
 
-/* Soft halo ring that breathes with the pulse */
+/* Halo */
 .splash__logo::after{
   content:""; position:absolute; inset:-22%; border-radius:32px;
   background:radial-gradient(closest-side, rgba(17,177,255,.28), rgba(17,177,255,.0) 60%);
@@ -70,7 +72,24 @@ body::before{
   pointer-events:none;
 }
 
-/* Two pulses per cycle with slight lift */
+/* ACCESS APPROVED text */
+.splash__access{
+  font-family:'Orbitron',sans-serif;
+  font-size:1.1rem; letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--success);
+  opacity:0; transform:scale(0.9);
+  text-shadow:0 0 10px var(--success), 0 0 20px var(--success);
+  transition:opacity .5s ease, transform .5s ease;
+}
+.splash__access.visible{
+  opacity:1; transform:scale(1);
+}
+.splash__access.fadeout{
+  opacity:0; transform:scale(1.1);
+}
+
+/* Pulse animations */
 @keyframes doublePulse{
   0%   { transform:translateY(0) scale(1); }
   10%  { transform:translateY(-1px) scale(1.06); }
@@ -89,8 +108,8 @@ body::before{
 }
 
 /* Fade states */
-.splash.is-fading{ opacity:0; }              /* start fade */
-.splash.is-hidden{ opacity:0; visibility:hidden; } /* hide after fade completes */
+.splash.is-fading{ opacity:0; }              
+.splash.is-hidden{ opacity:0; visibility:hidden; } 
 
 @media (prefers-reduced-motion: reduce){
   .splash__logo{animation:none}
@@ -98,11 +117,12 @@ body::before{
   .splash{transition:none}
 }
 
-/* ---------- LAYOUT ---------- */
+/* ---------- PAGE LAYOUT ---------- */
 .wrap{max-width:1080px;margin:0 auto;padding:28px 18px;flex:1;width:100%;
   opacity:0; transform:translateY(8px); transition:opacity .6s ease, transform .6s ease}
 .app-ready .wrap{opacity:1;transform:none}
 
+/* Header etc. */
 header{display:flex;align-items:center;gap:16px;padding:10px 0 22px;border-bottom:1px solid var(--line)}
 .logo img{ width:94px;height:auto;border-radius:18px; box-shadow:0 10px 24px rgba(17,177,255,.22); }
 .logo-text h1{
@@ -114,6 +134,7 @@ header{display:flex;align-items:center;gap:16px;padding:10px 0 22px;border-botto
 }
 @keyframes shine{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 .logo-text p{color:var(--muted);font-size:13px}
+
 main{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:40px;padding:24px 0}
 .content{flex:1 1 460px}
 h2{
@@ -132,7 +153,7 @@ li{margin-bottom:8px}
 }
 .note{font-size:12.5px;color:var(--muted);margin-top:8px}
 
-/* Terms card */
+/* Card */
 .card{
   flex:1 1 330px;background:linear-gradient(180deg,#0e1322,#0d1220);
   border:1px solid var(--line);border-radius:18px;padding:22px;
@@ -142,12 +163,10 @@ li{margin-bottom:8px}
 .row{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center;margin:10px 0}
 .label{color:var(--muted);font-size:13px}
 .value{font-weight:700}
-
-/* Icons */
 .icon{width:16px;height:16px;display:inline-block;vertical-align:-2px}
 .icon svg{width:16px;height:16px;display:block}
 
-/* ---------- FOOTER ---------- */
+/* Footer */
 footer{
   position:relative; z-index:1; display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;
   padding:18px 18px; background:rgba(0,10,20,.28); backdrop-filter:saturate(120%) blur(2px); color:var(--muted); font-size:14px;
@@ -164,7 +183,6 @@ footer a::after{
 }
 footer a:hover::after{transform:scaleX(1)}
 
-/* ---------- RESPONSIVE ---------- */
 @media (max-width:960px){
   .wrap{padding:24px 16px}
   main{flex-direction:column}
@@ -184,6 +202,7 @@ footer a:hover::after{transform:scaleX(1)}
   <!-- Splash -->
   <div class="splash" id="splash" aria-hidden="true">
     <img class="splash__logo" src="assets/logo.png" alt="F1 Cash logo">
+    <div class="splash__access" id="accessText">ACCESS APPROVED</div>
   </div>
 
   <!-- Main content -->
@@ -216,7 +235,6 @@ footer a:hover::after{transform:scaleX(1)}
         <div class="row">
           <span class="label">
             <span class="icon" aria-hidden="true">
-              <!-- Mail icon -->
               <svg viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" stroke="#9ecaff" stroke-width="1.5"/><path d="M21 7l-9 6L3 7" stroke="#9ecaff" stroke-width="1.5"/></svg>
             </span> Support
           </span>
@@ -225,7 +243,6 @@ footer a:hover::after{transform:scaleX(1)}
         <div class="row">
           <span class="label">
             <span class="icon" aria-hidden="true">
-              <!-- Phone icon -->
               <svg viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.5-.37l3.3 1.1a1.5 1.5 0 0 1 1 1.41V19a2 2 0 0 1-2.2 2A18 18 0 0 1 3 6.2 2 2 0 0 1 5 4h1.6a1.5 1.5 0 0 1 1.42 1l1.1 3.3c.17.47.05 1-.3 1.35L6.6 10.8Z" stroke="#9ecaff" stroke-width="1.5"/></svg>
             </span> Phone
           </span>
@@ -248,52 +265,4 @@ footer a:hover::after{transform:scaleX(1)}
       </span>
       &nbsp;<a href="tel:+12294484389">+1 229-448-4389</a>
     </div>
-    <div>© 2025 F1 Cash · All rights reserved.</div>
-  </footer>
-
-  <!-- Splash controller: now with guaranteed reveal fallback -->
-  <script>
-  (function(){
-    var splash = document.getElementById('splash');
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function revealApp(){
-      document.body.classList.add('app-ready'); // reveal content
-      if (splash){ splash.classList.add('is-hidden'); } // fully hide splash
-    }
-
-    if (reduce){
-      // No animations: show app immediately, hide splash
-      revealApp();
-      return;
-    }
-
-    // Timings (keep in sync with CSS)
-    var INTRO_MS = 1100;      // how long to display the pulsing logo
-    var FADE_MS  = 700;       // matches .splash transition duration
-
-    // After intro, begin fade and reveal with a hard fallback timer
-    setTimeout(function(){
-      if (splash){ splash.classList.add('is-fading'); }
-
-      var revealed = false;
-      function done(){
-        if (revealed) return;
-        revealed = true;
-        revealApp();
-      }
-
-      // Primary: wait for transition end of opacity
-      if (splash){
-        splash.addEventListener('transitionend', function onEnd(e){
-          if (e.propertyName === 'opacity'){ splash.removeEventListener('transitionend', onEnd); done(); }
-        });
-      }
-
-      // Fallback: force reveal even if the event is missed
-      setTimeout(done, FADE_MS + 80);
-    }, INTRO_MS);
-  })();
-  </script>
-</body>
-</html>
+    <div>©
