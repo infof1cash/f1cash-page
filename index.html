@@ -29,7 +29,7 @@ body{
   overflow-x:hidden;
 }
 
-/* Unified cosmic backdrop + grain (prevents banding) */
+/* Background + grain (prevents banding) */
 .bg-cosmos{
   position:fixed; inset:-15% -15% -15% -15%; z-index:-3; pointer-events:none;
   background:
@@ -74,18 +74,29 @@ footer a:hover{text-decoration:underline}
 .splash.is-fading{opacity:0}
 .splash.is-hidden{opacity:0; visibility:hidden}
 
-.splash__stage{position:relative; display:grid; place-items:center; gap:14px}
+.splash__stage{position:relative; display:grid; place-items:center; gap:16px}
 .logo-stack{position:relative; display:grid; place-items:center}
+
+/* Rounded tile that blends in with backdrop */
+.splash__tile{
+  position:absolute; width:min(62vw,520px); aspect-ratio:1.4/1; border-radius:28px;
+  background:
+    radial-gradient(140% 120% at 18% 20%, rgba(8,180,255,.18), transparent 60%),
+    linear-gradient(180deg, rgba(10,16,28,.65), rgba(6,10,20,.45));
+  border:1px solid rgba(120,170,240,.12);
+  filter:blur(.2px) saturate(1.02);
+  box-shadow:inset 0 0 1px rgba(255,255,255,.06), 0 40px 70px rgba(0,0,0,.45);
+}
+@media (max-width:900px){ .splash__tile{ width:min(82vw,440px) } }
 
 /* Bigger logo on desktop; calm pulse */
 .splash__logo{
-  width:min(50vw, 320px); height:auto; border-radius:28px;
-  box-shadow:0 16px 40px var(--glow), 0 0 0 1px rgba(255,255,255,.06) inset;
+  position:relative;
+  width:min(42vw, 280px); height:auto; border-radius:22px;
+  mix-blend-mode:screen; opacity:.98;
   animation:softPulse 3.2s ease-in-out infinite;
-  filter:drop-shadow(0 10px 24px rgba(0,0,0,.45));
+  filter:contrast(1.08) saturate(1.06) drop-shadow(0 10px 24px rgba(0,0,0,.45));
 }
-@media (max-width:900px){ .splash__logo{ width:196px } }
-
 @keyframes softPulse{
   0%   { transform:translateY(0) scale(1) }
   18%  { transform:translateY(-0.5px) scale(1.015) }
@@ -93,44 +104,30 @@ footer a:hover{text-decoration:underline}
   54%  { transform:translateY(-0.5px) scale(1.012) }
   100% { transform:translateY(0) scale(1) }
 }
+@media (max-width:900px){ .splash__logo{ width:196px } }
 
-/* aura + refined dual orbits + little glints */
-.logo-aura{
-  position:absolute; inset:-20%; border-radius:32px; pointer-events:none; z-index:-1;
-  background:
-    radial-gradient(closest-side, rgba(17,177,255,.22), rgba(17,177,255,0) 72%),
-    radial-gradient(120% 80% at 28% 22%, rgba(110,231,255,.16), rgba(17,177,255,0) 72%);
-  filter:blur(1.2px); mix-blend-mode:screen;
-}
-.logo-orbit, .logo-orbit::after{
-  position:absolute; inset:-12%; border-radius:32px; pointer-events:none; content:"";
-  -webkit-mask: radial-gradient(closest-side, transparent 81%, #000 82% 100%);
-          mask: radial-gradient(closest-side, transparent 81%, #000 82% 100%);
-}
-.logo-orbit{
-  background:conic-gradient(from 0deg, rgba(17,177,255,0), rgba(17,177,255,.55) 18%, rgba(17,177,255,0) 22%, rgba(110,231,255,0) 60%, rgba(17,177,255,0));
+/* Aura + rounded-tile orbit (thin, subtle) */
+.tile-orbit{
+  position:absolute; width:clamp(220px,42vw,320px); aspect-ratio:1/1; border-radius:22px;
+  -webkit-mask: radial-gradient(closest-side, transparent 78%, #000 80% 100%);
+          mask: radial-gradient(closest-side, transparent 78%, #000 80% 100%);
+  background:conic-gradient(from 0deg, rgba(17,177,255,0), rgba(17,177,255,.55) 20%, rgba(17,177,255,0) 25%, rgba(110,231,255,0) 60%, rgba(17,177,255,0));
   animation:orbit 9.5s linear infinite;
   filter:drop-shadow(0 0 6px rgba(17,177,255,.28));
 }
-.logo-orbit::after{
-  inset:-18%;
-  background:conic-gradient(from 180deg, rgba(17,177,255,0), rgba(110,231,255,.35) 10%, rgba(17,177,255,0) 15%, rgba(17,177,255,0));
-  animation:orbitReverse 13s linear infinite;
-  filter:drop-shadow(0 0 5px rgba(110,231,255,.25));
-}
-@keyframes orbit{to{transform:rotate(360deg)}} 
-@keyframes orbitReverse{to{transform:rotate(-360deg)}}
+@keyframes orbit{to{transform:rotate(360deg)}}
 
-/* glints */
-.logo-glint{
-  position:absolute; width:6px; height:6px; border-radius:50%;
-  background:radial-gradient(circle, #6ee7ff 0, rgba(110,231,255,.0) 70%);
-  filter:blur(.3px); opacity:.55; pointer-events:none;
-  animation:glint 7.8s linear infinite;
+/* NEW: sweep that follows the actual logo shape (masked by the logo image) */
+.logo-sweep{
+  position:absolute; inset:0; pointer-events:none; opacity:.70; mix-blend-mode:screen;
+  background:conic-gradient(from 0deg, rgba(17,177,255,0), rgba(110,231,255,.85), rgba(17,177,255,0) 25%, rgba(17,177,255,0));
+  animation:spinSweep 7.5s linear infinite;
+  -webkit-mask: url("assets/logo.png") center/contain no-repeat;
+          mask: url("assets/logo.png") center/contain no-repeat;
+  mask-mode: luminance;
+  filter:blur(.6px);
 }
-.logo-glint:nth-of-type(1){ transform-origin:120px 0; }
-.logo-glint:nth-of-type(2){ transform-origin:-120px 0; animation-duration:9.2s; opacity:.4 }
-@keyframes glint{ to{ transform:rotate(360deg) } }
+@keyframes spinSweep{to{transform:rotate(360deg)}}
 
 /* Loading bar + Approved text */
 .progress{
@@ -156,18 +153,21 @@ footer a:hover{text-decoration:underline}
   color:var(--success); font-size:1rem;
   text-shadow:0 0 10px var(--success), 0 0 20px var(--success);
 }
+@media (prefers-reduced-motion: reduce){
+  .splash{transition:none} .splash__logo{animation:none}
+}
 
 /* ---------- CONTENT ---------- */
 header{display:flex;align-items:center;gap:16px;padding:18px 0 22px;border-bottom:1px solid var(--line)}
 .logo{
-  position:relative; width:86px; height:86px; border-radius:18px; overflow:hidden;
+  position:relative; width:86px; height:86px; border-radius:18px; overflow:hidden; isolate:isolate;
+  background:radial-gradient(120% 120% at 30% 30%, rgba(8,180,255,.22), transparent 60%), #081018;
   box-shadow:0 10px 24px rgba(17,177,255,.22);
-  background:radial-gradient(120% 120% at 30% 30%, rgba(8,180,255,.26), rgba(6,12,22,.0) 60%), #081018;
 }
-.logo img{ width:100%; height:100%; object-fit:cover; mix-blend-mode:screen; opacity:.95; filter:contrast(1.05) saturate(1.05) }
+.logo img{ width:100%; height:100%; object-fit:cover; mix-blend-mode:screen; opacity:.98; filter:contrast(1.08) saturate(1.05) }
 .logo::before{
   content:""; position:absolute; inset:-8px; border-radius:24px;
-  background:conic-gradient(from 0deg, rgba(17,177,255,0), rgba(17,177,255,.6), rgba(110,231,255,0) 60%, rgba(17,177,255,0));
+  background:conic-gradient(from 0deg, rgba(17,177,255,0), rgba(17,177,255,.55), rgba(110,231,255,0) 60%, rgba(17,177,255,0));
   -webkit-mask: radial-gradient(closest-side, transparent 78%, #000 79% 100%);
           mask: radial-gradient(closest-side, transparent 78%, #000 79% 100%);
   animation:orbit 7.6s linear infinite; filter:blur(1px);
@@ -200,7 +200,7 @@ li{margin-bottom:8px}
 }
 .note{font-size:12.5px;color:var(--muted);margin-top:8px}
 
-/* ---------- FUTURISTIC TERMS CARD ---------- */
+/* ---------- FUTURISTIC TERMS CARD (fixed content + small icons) ---------- */
 .card{
   --gd:rgba(20,30,55,.86);
   position:relative;
@@ -231,8 +231,14 @@ li{margin-bottom:8px}
   border-bottom:1px solid rgba(120,170,240,.18); padding-bottom:10px;
 }
 .row{display:grid;grid-template-columns:160px 1fr;gap:12px 14px;align-items:center;margin:12px 0}
-.label{color:var(--muted);font-size:14px}
+.label{color:var(--muted);font-size:14px;display:flex;align-items:center;gap:8px}
 .value{font-weight:800;color:#e8f2ff}
+
+/* tiny inline icons only */
+.icon{width:18px;height:18px;display:inline-grid;place-items:center;flex:0 0 18px}
+.icon svg{width:16px;height:16px;display:block}
+
+/* Neon corner nodes + scan line */
 .card .node{position:absolute;width:8px;height:8px;border-radius:50%;background:rgba(17,177,255,.9);animation:nodePulse 2.6s ease-in-out infinite}
 .card .node.tl{top:10px;left:10px} .card .node.tr{top:10px;right:10px}
 .card .node.bl{bottom:10px;left:10px} .card .node.br{bottom:10px;right:10px}
@@ -245,6 +251,9 @@ li{margin-bottom:8px}
   animation:cardScan 5.5s ease-in-out .8s infinite; pointer-events:none;
 }
 @keyframes cardScan{0%{transform:translateY(0); opacity:0} 8%{opacity:.8} 40%{transform:translateY(calc(100% - 28px)); opacity:.8} 48%{opacity:0} 100%{opacity:0}}
+
+/* Links theme (no default blue) */
+a:any-link{color:#a8dfff} a:visited{color:#a8dfff}
 
 /* ---------- PIXEL OVERLAYS ---------- */
 .pixel-overlay{
@@ -283,24 +292,23 @@ li{margin-bottom:8px}
   <div class="bg-cosmos"></div>
   <div class="bg-grain"></div>
 
-  <!-- Splash: logo + loading bar + approved -->
+  <!-- Splash: blended tile + logo shape-following sweep + progress gate -->
   <div class="splash" id="splash" aria-hidden="true">
     <div class="splash__stage">
+      <div class="splash__tile" aria-hidden="true"></div>
       <div class="logo-stack">
         <img class="splash__logo" src="assets/logo.png" alt="F1 Cash logo">
-        <div class="logo-aura" aria-hidden="true"></div>
-        <div class="logo-orbit" aria-hidden="true"></div>
-        <div class="logo-glint" aria-hidden="true"></div>
-        <div class="logo-glint" aria-hidden="true"></div>
+        <div class="tile-orbit" aria-hidden="true"></div>
+        <div class="logo-sweep" aria-hidden="true"></div>
       </div>
       <div class="progress" aria-label="Loading"><div class="progress__bar" id="bar"></div></div>
-      <div class="progress__label" id="label">Authorizing…</div>
+      <div class="progress__label" id="label">AUTHORIZING…</div>
       <div class="approved" id="approved">ACCESS APPROVED</div>
     </div>
   </div>
 
   <!-- Pixel overlay for assemble + dissolve (keeps page hidden) -->
-  <div class="pixel-overlay" id="pixelOverlay" style="--px-cols:20;--px-rows:12" aria-hidden="true"></div>
+  <div class="pixel-overlay" id="pixelOverlay" style="--px-cols:22;--px-rows:12" aria-hidden="true"></div>
 
   <!-- Page -->
   <div class="page">
@@ -381,7 +389,7 @@ li{margin-bottom:8px}
   // Build pixel grid with edge-spawn vectors
   (function buildPixels(){
     var styles = getComputedStyle(pxLayer);
-    var cols = parseInt(styles.getPropertyValue('--px-cols')) || 20;
+    var cols = parseInt(styles.getPropertyValue('--px-cols')) || 22;
     var rows = parseInt(styles.getPropertyValue('--px-rows')) || 12;
     var w = innerWidth, h = innerHeight;
     var frag = document.createDocumentFragment();
@@ -427,7 +435,7 @@ li{margin-bottom:8px}
         if (e.propertyName === 'opacity'){ splash.removeEventListener('transitionend', onEnd); end(); }
       });
     }
-    setTimeout(end, 900); // failsafe
+    setTimeout(end, 900);
   }
 
   function runSequence(){
@@ -445,8 +453,8 @@ li{margin-bottom:8px}
         setTimeout(function(){
           label.style.display='none';
           approved.style.display='block';
-          assemblePixels();              // rectangles converge while user sees APPROVED
-          setTimeout(revealPage, 520);   // then reveal site
+          assemblePixels();           // rectangles converge while APPROVED shows
+          setTimeout(revealPage, 520);
         }, 220);
       }
     }
@@ -461,10 +469,9 @@ li{margin-bottom:8px}
     document.removeEventListener('pointerdown', skipOnce);
   }, { once:true });
 
-  // Start
   runSequence();
 
-  // Safety: ensure reveal happens
+  // Safety
   setTimeout(function(){
     if (!document.body.classList.contains('page-on')){
       label.style.display='none'; approved.style.display='block';
