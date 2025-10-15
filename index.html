@@ -6,7 +6,7 @@
 <title>F1 Cash — Simple Business Funding</title>
 <meta name="description" content="F1 Cash provides simple, fast working capital for small businesses." />
 
-<!-- Futuristic fonts -->
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
 :root{
   --bg-1:#05070d; --bg-2:#0b1220; --line:#1c2640; --ink:#e6ecff; --muted:#92a0c5;
   --accent:#11b1ff; --accent2:#6ee7ff; --glow:rgba(17,177,255,.28);
-  --ok:#2bffad; --warn:#ffd166;
+  --success:#24ff90; --scan:rgba(17,177,255,.45);
 }
 
 /* ---------- RESET / QUALITY ---------- */
@@ -30,10 +30,9 @@ body{
   font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility;
 }
-
-/* subtle animated ambience */
+/* ambience */
 body::before{
-  content:""; position:fixed; inset:-20% -20% -20% -20%; pointer-events:none; z-index:-1;
+  content:""; position:fixed; inset:-20%; pointer-events:none; z-index:-1;
   background:
     radial-gradient(60% 40% at 20% 20%, rgba(17,177,255,.08), transparent 60%),
     radial-gradient(50% 35% at 80% 10%, rgba(110,231,255,.06), transparent 60%),
@@ -46,89 +45,61 @@ body::before{
   100%{transform:translate3d(2%,-1%,0) scale(1.02)}
 }
 
-/* ---------- SPLASH: Space Vault ---------- */
+/* ---------- SPLASH ---------- */
 .splash{
   position:fixed; inset:0; z-index:9999; display:grid; place-items:center;
   background:
     radial-gradient(1100px 800px at 50% -20%, #0c1325 0%, #06080f 65%, #05070d 100%),
     linear-gradient(120deg, var(--bg-1), var(--bg-2));
   opacity:1; visibility:visible;
-  transition:opacity .65s ease, visibility .65s ease;
-  overflow:hidden;
+  transition:opacity .7s ease, visibility .7s ease;
 }
-
-/* Vault stage stack */
-.vault{
-  position:relative; width:min(62vmin,420px); aspect-ratio:1/1; display:grid; place-items:center;
-}
-
-/* Pulsing logo (center) */
-.splash__logo{
-  width:38%; border-radius:22px;
-  box-shadow:0 20px 48px var(--glow), 0 0 0 1px rgba(255,255,255,.06) inset;
-  animation:doublePulse 1.8s ease-in-out infinite;
-  position:relative; z-index:3;
-  filter:drop-shadow(0 10px 22px rgba(0,0,0,.45));
-}
-
-/* Concentric rotating neon rings (vault dial) */
-.ring, .ring::before, .ring::after{
-  content:""; position:absolute; inset:0; border-radius:50%;
-}
-.ring{
-  z-index:1; mix-blend-mode:screen; pointer-events:none;
-  box-shadow:0 0 0 1px rgba(255,255,255,.06) inset, 0 0 48px var(--glow);
-}
-.ring::before{
-  inset: -8%; border:2px dashed rgba(17,177,255,.55);
-  filter:drop-shadow(0 0 12px rgba(17,177,255,.55));
-  animation:spin 9s linear infinite;
-}
-.ring::after{
-  inset: -18%; border:2px solid transparent;
-  border-top-color: rgba(110,231,255,.85);
-  border-left-color: rgba(110,231,255,.45);
-  filter:drop-shadow(0 0 14px rgba(110,231,255,.85));
-  animation:spinReverse 12s linear infinite;
-}
-
-@keyframes spin{ to{ transform:rotate(360deg) } }
-@keyframes spinReverse{ to{ transform:rotate(-360deg) } }
-
-/* HUD text below logo */
-.hud{
-  position:absolute; bottom:-56px; left:50%; transform:translateX(-50%);
-  width:max(240px,48%); text-align:center; z-index:3;
-  font-family:'Orbitron',system-ui,sans-serif; letter-spacing:1.8px; text-transform:uppercase;
-  font-size:.82rem; color:#a8dfff; opacity:0; transform-origin:center;
-  transition:opacity .4s ease, filter .4s ease;
-  filter:saturate(1.1);
-}
-.hud .row{opacity:.85}
-.hud .ok{color:var(--ok)}
-.hud .warn{color:var(--warn)}
-.hud.visible{opacity:1}
-
-/* Sliding vault doors */
-.doors{position:absolute; inset:0; display:grid; grid-template-columns:1fr 1fr; z-index:4; pointer-events:none}
-.door{
-  background:
-    radial-gradient(600px 300px at 50% 0%, rgba(17,177,255,.12), transparent 70%),
-    linear-gradient(180deg, rgba(7,12,24,.92), rgba(6,10,20,.88));
-  border:1px solid rgba(110,150,230,.16);
-  backdrop-filter:saturate(110%) blur(1.5px);
-  box-shadow:inset 0 0 1px rgba(255,255,255,.05), 0 20px 50px rgba(0,0,0,.35);
-  transition:transform .9s cubic-bezier(.2,.8,.2,1);
-}
-.door.left{border-right:0}
-.door.right{border-left:0}
-.unlock .door.left{transform:translateX(-100%)}
-.unlock .door.right{transform:translateX(100%)}
-
-/* End state of splash */
 .splash.is-fading{opacity:0}
 .splash.is-hidden{opacity:0; visibility:hidden}
 
+.splash__stack{display:flex;flex-direction:column;align-items:center;gap:18px; position:relative}
+.splash__logo{
+  width:184px; height:auto; border-radius:26px;
+  box-shadow:0 20px 48px var(--glow), 0 0 0 1px rgba(255,255,255,.06) inset;
+  animation:doublePulse 1.8s ease-in-out infinite;
+  filter:drop-shadow(0 8px 18px rgba(0,0,0,.45));
+}
+
+/* ACCESS APPROVED module */
+.approved{
+  font-family:'Orbitron',sans-serif; letter-spacing:2px; text-transform:uppercase;
+  color:var(--success); font-size:0.95rem; line-height:1;
+  opacity:0; transform:translateY(6px) scale(.98);
+  transition:opacity .35s ease, transform .35s ease;
+  text-shadow:0 0 10px var(--success), 0 0 20px var(--success);
+  position:relative; padding:.6rem 1rem; border-radius:10px;
+  background:linear-gradient(180deg, rgba(10,20,30,.35), rgba(8,14,24,.2));
+  border:1px solid rgba(120,220,170,.25);
+  overflow:hidden;
+}
+.approved.visible{opacity:1; transform:translateY(0) scale(1)}
+/* scanning bar */
+.approved::before{
+  content:""; position:absolute; left:0; right:0; height:2px; top:0;
+  background:linear-gradient(90deg, transparent, var(--scan), transparent);
+  transform:translateY(-100%);
+  animation:scan 1.6s ease-out .1s forwards;
+}
+@keyframes scan{
+  0%{transform:translateY(-100%)}
+  60%{transform:translateY(calc(100% - 2px))}
+  100%{transform:translateY(calc(100% - 2px))}
+}
+/* tiny brackets */
+.approved .br{opacity:.8; color:#7bf3bf}
+
+/* skip hint (click to skip animation) */
+.skip-hint{
+  font-size:12px; color:#8aa6d6; opacity:.55; margin-top:4px;
+}
+.skip-hint kbd{padding:0 4px;border:1px solid rgba(255,255,255,.2); border-radius:4px; font-size:11px}
+
+/* pulses */
 @keyframes doublePulse{
   0%   { transform:translateY(0) scale(1) }
   10%  { transform:translateY(-1px) scale(1.06) }
@@ -140,11 +111,11 @@ body::before{
 
 @media (prefers-reduced-motion: reduce){
   .splash__logo{animation:none}
-  .ring::before, .ring::after{animation:none}
+  .approved::before{animation:none}
   .splash{transition:none}
 }
 
-/* ---------- PAGE LAYOUT ---------- */
+/* ---------- PAGE LAYOUT (your original styles) ---------- */
 .wrap{max-width:1080px;margin:0 auto;padding:28px 18px;flex:1;width:100%;
   opacity:0; transform:translateY(8px); transition:opacity .6s ease, transform .6s ease}
 .app-ready .wrap{opacity:1;transform:none}
@@ -160,7 +131,6 @@ header{display:flex;align-items:center;gap:16px;padding:10px 0 22px;border-botto
 }
 @keyframes shine{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 .logo-text p{color:var(--muted);font-size:13px}
-
 main{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:40px;padding:24px 0}
 .content{flex:1 1 460px}
 h2{
@@ -189,6 +159,8 @@ li{margin-bottom:8px}
 .row{display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center;margin:10px 0}
 .label{color:var(--muted);font-size:13px}
 .value{font-weight:700}
+
+/* Icons */
 .icon{width:16px;height:16px;display:inline-block;vertical-align:-2px}
 .icon svg{width:16px;height:16px;display:block}
 
@@ -214,30 +186,24 @@ footer a:hover::after{transform:scaleX(1)}
   main{flex-direction:column}
   h2{font-size:36px}
   .logo img{width:86px}
+  .splash__logo{width:168px}
 }
 @media (max-width:520px){
   h2{font-size:30px}
   .card{padding:18px}
+  .splash__logo{width:148px}
 }
 </style>
 </head>
 
 <body>
-  <!-- Splash: SPACE VAULT -->
+  <!-- Splash -->
   <div class="splash" id="splash" aria-hidden="true">
-    <div class="vault" id="vault">
-      <div class="ring" aria-hidden="true"></div>
+    <div class="splash__stack">
       <img class="splash__logo" src="assets/logo.png" alt="F1 Cash logo">
-      <div class="hud" id="hud" aria-live="polite">
-        <div class="row">Initializing vault · <span class="warn">stand by…</span></div>
-        <div class="row" id="hud2" style="opacity:.15">Calibrating rings</div>
-        <div class="row" id="hud3" style="opacity:.15">Key handshake</div>
-      </div>
-
-      <!-- Doors (slide to open) -->
-      <div class="doors" id="doors" aria-hidden="true">
-        <div class="door left"></div>
-        <div class="door right"></div>
+      <div class="approved" id="approved">
+        <span class="br">[</span> ACCESS&nbsp;APPROVED <span class="br">]</span>
+        <div class="skip-hint">Click anywhere to skip</div>
       </div>
     </div>
   </div>
@@ -307,70 +273,47 @@ footer a:hover::after{transform:scaleX(1)}
     <div>© 2025 F1 Cash · All rights reserved.</div>
   </footer>
 
-  <!-- Vault sequence controller with bulletproof fallbacks -->
+  <!-- Splash controller (bulletproof) -->
   <script>
   (function(){
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var splash = document.getElementById('splash');
-    var doors  = document.getElementById('doors');
-    var vault  = document.getElementById('vault');
-    var hud    = document.getElementById('hud');
-    var hud2   = document.getElementById('hud2');
-    var hud3   = document.getElementById('hud3');
+    var approved = document.getElementById('approved');
 
-    function revealApp(){
+    function reveal(){
+      // reveal content and hide splash (with extra fallback)
       document.body.classList.add('app-ready');
       if (splash){ splash.classList.add('is-fading'); }
-      // Hide after fade completes, with extra fallback
-      var hid = false;
-      var done = function(){ if(hid) return; hid = true; splash && splash.classList.add('is-hidden'); };
+      var done = false;
+      function hide(){ if(done) return; done = true; if(splash){ splash.classList.add('is-hidden'); } }
       if (splash){
         splash.addEventListener('transitionend', function onEnd(e){
-          if (e.propertyName === 'opacity'){ splash.removeEventListener('transitionend', onEnd); done(); }
+          if (e.propertyName === 'opacity'){ splash.removeEventListener('transitionend', onEnd); hide(); }
         });
       }
-      setTimeout(done, 800);
+      setTimeout(hide, 900); // hard fallback
     }
 
-    // Reduced motion: skip fancy stuff
+    // Skip on click anywhere
+    document.addEventListener('pointerdown', reveal, { once:true });
+
     if (reduce){
-      revealApp();
+      // No animation path
+      reveal();
       return;
     }
 
-    // Timeline (ms)
-    var INTRO = 800;      // let the logo pulse a bit
-    var HUD1  = INTRO + 300;  // show HUD line 1
-    var HUD2  = INTRO + 700;  // show HUD line 2
-    var HUD3  = INTRO + 1000; // show HUD line 3
-    var UNLOCK= INTRO + 1300; // start doors opening
-    var REVEAL= UNLOCK + 950; // after doors finish, reveal content
+    // Timed sequence: show "ACCESS APPROVED", then reveal
+    var SHOW_APPROVED_AT = 700;   // ms after load
+    var REVEAL_AT        = 1900;  // ms after load
 
-    // Step 1: show HUD lines (subtle)
-    setTimeout(function(){ hud && hud.classList.add('visible'); }, HUD1);
-    setTimeout(function(){ if(hud2){ hud2.style.opacity = 0.85; hud2.textContent = 'Calibrating rings — OK'; } }, HUD2);
-    setTimeout(function(){ if(hud3){ hud3.style.opacity = 0.85; hud3.innerHTML = 'Key handshake — <span style="color:var(--ok)">verified</span>'; } }, HUD3);
+    setTimeout(function(){ if(approved){ approved.classList.add('visible'); } }, SHOW_APPROVED_AT);
+    setTimeout(reveal, REVEAL_AT);
 
-    // Step 2: unlock doors
-    var unlocked = false;
+    // Absolute final safety: ensure reveal even if timers get throttled
     setTimeout(function(){
-      if (!doors || unlocked) return;
-      unlocked = true;
-      vault.classList.add('unlock');
-      // Primary: wait for a door transition end
-      var done = false;
-      function finish(){ if(done) return; done = true; setTimeout(revealApp, 120); }
-      doors.addEventListener('transitionend', function onT(e){
-        if (e.propertyName === 'transform'){ doors.removeEventListener('transitionend', onT); finish(); }
-      });
-      // Fallback in case transitionend is missed
-      setTimeout(finish, 1000);
-    }, UNLOCK);
-
-    // Absolute fallback: ensure reveal even if everything else fails
-    setTimeout(function(){
-      if (!document.body.classList.contains('app-ready')) revealApp();
-    }, REVEAL + 600);
+      if (!document.body.classList.contains('app-ready')) reveal();
+    }, 4000);
   })();
   </script>
 </body>
